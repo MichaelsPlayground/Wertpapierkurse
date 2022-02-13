@@ -28,6 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,11 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
     EditText stockIsin, stockName, date;
     DatePickerDialog datePickerDialog;
-    Button getStockName, getPrices, monthYearPicker;
+    Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
     ArrayList<Entry> pricesClose = new ArrayList<>();
+
+    List<String[]> csvList = new ArrayList<>();
+    String[] csvHeaderPrices = {"date", "timestamp", "close"};
 
     // for selecting start and end date of download historical prices
     private int yearSelected;
@@ -80,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         getStockName = findViewById(R.id.btnSearchIsin);
         monthYearPicker = findViewById(R.id.btnMonthYearPicker);
         getPrices = findViewById(R.id.btnGetPrices);
+        csvSave = findViewById(R.id.btnCsvSave);
+        csvLoad = findViewById(R.id.btnCsvLoad);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -182,7 +189,25 @@ public class MainActivity extends AppCompatActivity {
                     }
                     String dataName = sbName.toString();
                     System.out.println("Content:\n" + dataName);
+
+                    // for csv export
+                    csvList.add(csvHeaderPrices);
+
                     parsePrices(dataName);
+
+                    String path = getFilesDir().getAbsolutePath();
+                    String csvFilename = isin + "_" +
+                            yearSelected + "-" +
+                            String.format("%02d", monthSelected) + ".txt";
+                    String csvFilenameComplete = path + "/" + csvFilename;
+                    System.out.println("csv file storing: " + csvFilenameComplete);
+                    CsvWriterSimple writer = new CsvWriterSimple();
+                    try {
+                        writer.writeToCsvFile(csvList, new File(csvFilenameComplete));
+                        System.out.println("csv file written");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     Comparator<Entry> comparator = new Comparator<Entry>() {
                         @Override
@@ -215,6 +240,30 @@ public class MainActivity extends AppCompatActivity {
                 shortMonthsPicker = true;
                 //currentYear = Year.now().getValue();
                 displayMonthYearPickerDialogFragment(true, false);
+            }
+        });
+
+        csvSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Editable isin = stockIsin.getText();
+                String path = getFilesDir().getAbsolutePath();
+                String csvFilename = isin + "_" +
+                        yearSelected + "-" +
+                        String.format("%02d", monthSelected) + ".txt";
+                String csvFilenameComplete = path + "/" + csvFilename;
+                System.out.println("file storing: " + csvFilenameComplete);
+                List<String[]> list = new ArrayList<>();
+                String[] header = {"date", "close"};
+                list.add(header);
+
+            }
+        });
+
+        csvLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -371,6 +420,52 @@ public class MainActivity extends AppCompatActivity {
     // import com.google.gson.JsonParser;
     // https://devqa.io/how-to-parse-json-in-java/
     public void parsePrices(String json) {
+        // JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
+        // https://stackoverflow.com/questions/60771386/jsonparser-is-deprecated
+        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+        //String pageName = jsonObject.getAsJsonObject("pageInfo").get("pageName").getAsString();
+        //System.out.println(pageName);
+
+        JsonArray arr = jsonObject.getAsJsonArray("results");
+        for (int i = 0; i < arr.size(); i++) {
+            String date = arr.get(i).getAsJsonObject().get("t").getAsString();
+            String close = arr.get(i).getAsJsonObject().get("c").getAsString();
+            // convert unix timestamp to date
+            //long dateL = Long.parseLong(date);
+            //LocalDateTime dateTimeLocal = LocalDateTime.ofInstant(Instant.ofEpochSecond(dateL), TimeZone.getDefault().toZoneId());
+            System.out.println("date: " + date +
+                    //      " dateLocal: " + dateTimeLocal +
+                    " close: " + close);
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+            Date dateUnix = null;
+            try {
+                dateUnix = dateFormat.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            long unixTime = (long) dateUnix.getTime()/1000;
+            //System.out.println(unixTime );//<- prints 1352504418
+            //Float dateFloat = Float.parseFloat(unixTime);
+            float dateFloat = Float.valueOf(unixTime);
+            float priceCloseFloat = Float.parseFloat(close);
+            if (priceCloseFloat != 0) {
+                pricesClose.add(new Entry(dateFloat, priceCloseFloat));
+                String[] csvRecord = {date.substring(0, 10), String.valueOf(unixTime), close};
+                System.out.println("CSV data stored " + date.substring(0, 10) + " " + close);
+                csvList.add(csvRecord);
+            }
+            //stockName.setText(post_id);
+        }
+    }
+
+    // uses GSON
+    // import com.google.gson.JsonArray;
+    // import com.google.gson.JsonObject;
+    // import com.google.gson.JsonParser;
+    // https://devqa.io/how-to-parse-json-in-java/
+    public void parsePricesOrg(String json) {
         // JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
         // https://stackoverflow.com/questions/60771386/jsonparser-is-deprecated
         JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();

@@ -117,14 +117,36 @@
             android:text="M/Y Picker" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnGetPrices"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="lade die Kurse" />
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btnGetPrices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:text="Kurse laden" />
+
+        <Button
+            android:id="@+id/btnCsvSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:text="CSV Save" />
+
+        <Button
+            android:id="@+id/btnCsvLoad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="CSV Load" />
+    </LinearLayout>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/activity_main_linechart"
@@ -132,5 +154,6 @@
         android:layout_height="fill_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
+
 
 </LinearLayout>
