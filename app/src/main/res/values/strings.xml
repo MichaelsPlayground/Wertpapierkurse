@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Wertpapierkurse</string>
+    <string name="custom_title">custom title</string>
 </resources>

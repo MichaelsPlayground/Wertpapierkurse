@@ -1,6 +1,7 @@
 package de.androidcrypto.wertpapierkurse;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,6 +14,10 @@ import android.widget.EditText;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import com.github.dewinjm.monthyearpicker.MonthFormat;
+import com.github.dewinjm.monthyearpicker.MonthYearPickerDialog;
+import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -22,21 +27,43 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 public class MainActivity extends AppCompatActivity {
     // lemon.markets docs: https://data.lemon.markets/v1/docs
 
     EditText stockIsin, stockName, date;
     DatePickerDialog datePickerDialog;
-    Button getStockName, getPrices;
+    Button getStockName, getPrices, monthYearPicker;
     String API_URL = "https://data.lemon.markets/v1/";
 
-    //ArrayList<Entry> pricesClose = new ArrayList<>();
+    private LineChart lineChart;
+    ArrayList<Entry> pricesClose = new ArrayList<>();
+
+    private int yearSelected;
+    private int monthSelected;
+
+    // msci world IE00BJ0KDQ92
+    // nasdaq IE00B53SZB19
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +75,17 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        lineChart = findViewById(R.id.activity_main_linechart);
+
         stockIsin = findViewById(R.id.etIsin);
         stockName = findViewById(R.id.etStockName);
         getStockName = findViewById(R.id.btnSearchIsin);
+        monthYearPicker = findViewById(R.id.btnMonthYearPicker);
         getPrices = findViewById(R.id.btnGetPrices);
+
+        final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
+
+        configureLineChart();
 
         // initiate the date picker and a button
         date = (EditText) findViewById(R.id.etStartDate);
@@ -111,8 +145,6 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Error: " + e);
                     stockName.setText("Fehler, ISIN nicht gefunden");
                 }
-
-
             }
         });
 
@@ -120,13 +152,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("*** get prices ***");
+                pricesClose = new ArrayList<>();
                 URL urlName = null;
                 try {
                     Editable isin = stockIsin.getText();
                     System.out.println("für ISIN: " + isin);
                     // https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00BJ0KDQ92&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1
-                    //String urlString = API_URL + "ohlc/d1/?mic=XMUN&from=2022-01-01&decimals=true&epoch=false&sorting=asc&limit=25&page=1" + "?isin=" + isin;
-                    String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00BJ0KDQ92&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
+                    //String urlString = API_URL + "ohlc/d1/?mic=XMUN&from=2022-01-01&decimals=true&epoch=false&sorting=asc&limit=28&page=1" + "?isin=" + isin;
+                    String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=" + isin + "&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
+                    //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00B53SZB19&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
+                    //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00BJ0KDQ92&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
+                    System.out.println("urlString: " + urlString);
                     urlName = new URL(urlString);
                     //urlName = new URL("https://data.lemon.markets/v1/instruments/?isin=IE00BJ0KDQ92&mic=XMUN");
                     HttpURLConnection httpName = (HttpURLConnection) urlName.openConnection();
@@ -143,17 +179,80 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Content:\n" + dataName);
                     parsePrices(dataName);
 
+                    Comparator<Entry> comparator = new Comparator<Entry>() {
+                        @Override
+                        public int compare(Entry o1, Entry o2) {
+                            return Float.compare(o1.getX(), o2.getX());
+                        }
+                    };
+
+                    pricesClose.sort(comparator);
+                    //setLineChartData(pricesHigh, pricesLow, pricesClose);
+                    setLineChartData(pricesClose);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("Error: " + e);
                     stockName.setText("Fehler, ISIN nicht gefunden");
                 }
-
-
-
             }
         });
 
+        monthYearPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+/*
+        private MonthYearPickerDialogFragment createDialogWithRanges(boolean customTitle) {
+            final int minYear = 2010;
+            final int maxYear = currentYear;
+            final int maxMoth = 11;
+            final int minMoth = 0;
+            final int minDay = 1;
+            final int maxDay = 31;
+            long minDate;
+            long maxDate;
+
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.clear();
+            calendar.set(minYear, minMoth, minDay);
+            minDate = calendar.getTimeInMillis();
+
+            calendar.clear();
+            calendar.set(maxYear, maxMoth, maxDay);
+            maxDate = calendar.getTimeInMillis();
+
+            return MonthYearPickerDialogFragment
+                    .getInstance(monthSelected,
+                            yearSelected,
+                            minDate,
+                            maxDate,
+                            customTitle ? getString(R.string.custom_title).toUpperCase() : null,
+                            shortMonthsCheckBox.isChecked() ? MonthFormat.SHORT : MonthFormat.LONG);
+        }
+
+        private void displayMonthYearPickerDialogFragment(boolean withRanges,
+        boolean customTitle) {
+            MonthYearPickerDialogFragment dialogFragment = withRanges ?
+                    createDialogWithRanges(customTitle) :
+                    createDialog(customTitle);
+
+            dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(int year, int monthOfYear) {
+                    monthSelected = monthOfYear;
+                    yearSelected = year;
+                    updateViews();
+                }
+            });
+
+            dialogFragment.show(getSupportFragmentManager(), null);
+        }
+
+ */
     }
 
     // uses GSON
@@ -176,6 +275,67 @@ public class MainActivity extends AppCompatActivity {
             stockName.setText(post_id);
         }
 
+    }
+
+    private void configureLineChart() {
+        Description desc = new Description();
+        desc.setText("Stock Price History");
+        desc.setTextSize(20);
+        lineChart.setDescription(desc);
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setValueFormatter(new ValueFormatter() {
+            private final SimpleDateFormat mFormat = new SimpleDateFormat("dd MMM", Locale.ENGLISH);
+
+            @Override
+            public String getFormattedValue(float value) {
+                long millis = (long) value * 1000L;
+                return mFormat.format(new Date(millis));
+            }
+        });
+    }
+
+    private void setLineChartData(ArrayList<Entry> pricesClose) {
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+/*
+        if (highCheckBox.isChecked()) {
+            LineDataSet highLineDataSet = new LineDataSet(pricesHigh, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (High)");
+            highLineDataSet.setDrawCircles(true);
+            highLineDataSet.setCircleRadius(4);
+            highLineDataSet.setDrawValues(false);
+            highLineDataSet.setLineWidth(3);
+            highLineDataSet.setColor(Color.GREEN);
+            highLineDataSet.setCircleColor(Color.GREEN);
+            dataSets.add(highLineDataSet);
+        }
+
+        if (lowCheckBox.isChecked()) {
+            LineDataSet lowLineDataSet = new LineDataSet(pricesLow, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Low)");
+            lowLineDataSet.setDrawCircles(true);
+            lowLineDataSet.setCircleRadius(4);
+            lowLineDataSet.setDrawValues(false);
+            lowLineDataSet.setLineWidth(3);
+            lowLineDataSet.setColor(Color.RED);
+            lowLineDataSet.setCircleColor(Color.RED);
+            dataSets.add(lowLineDataSet);
+        }
+*/
+        //if (closeCheckBox.isChecked()) {
+            //LineDataSet closeLineDataSet = new LineDataSet(pricesClose, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Close)");
+        LineDataSet closeLineDataSet = new LineDataSet(pricesClose, "ISIN " + " Price (Close)");
+            //closeLineDataSet.setDrawCircles(true);
+            closeLineDataSet.setDrawCircles(false);
+            closeLineDataSet.setCircleRadius(4);
+            closeLineDataSet.setDrawValues(false);
+            closeLineDataSet.setLineWidth(3);
+            closeLineDataSet.setColor(Color.rgb(255, 165, 0));
+            closeLineDataSet.setCircleColor(Color.rgb(255, 165, 0));
+            dataSets.add(closeLineDataSet);
+        //}
+
+        LineData lineData = new LineData(dataSets);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
     }
 
     // uses GSON
@@ -201,9 +361,20 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("date: " + date +
                     //      " dateLocal: " + dateTimeLocal +
                     " close: " + close);
-            //Float dateFloat = Float.parseFloat(date);
-            //Float priceCloseFloat = Float.parseFloat(close);
-            //if (priceCloseFloat != 0) {pricesClose.add(new Entry(dateFloat, priceCloseFloat));}
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+            Date dateUnix = null;
+            try {
+                dateUnix = dateFormat.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            long unixTime = (long) dateUnix.getTime()/1000;
+            //System.out.println(unixTime );//<- prints 1352504418
+            //Float dateFloat = Float.parseFloat(unixTime);
+            float dateFloat = Float.valueOf(unixTime);
+            float priceCloseFloat = Float.parseFloat(close);
+            if (priceCloseFloat != 0) {pricesClose.add(new Entry(dateFloat, priceCloseFloat));}
             //stockName.setText(post_id);
         }
     }
