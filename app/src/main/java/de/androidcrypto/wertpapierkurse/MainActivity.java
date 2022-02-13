@@ -2,7 +2,6 @@ package de.androidcrypto.wertpapierkurse;
 
 import android.app.DatePickerDialog;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
@@ -11,13 +10,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.github.dewinjm.monthyearpicker.MonthFormat;
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialog;
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -30,23 +35,12 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 public class MainActivity extends AppCompatActivity {
     // lemon.markets docs: https://data.lemon.markets/v1/docs
@@ -59,8 +53,12 @@ public class MainActivity extends AppCompatActivity {
     private LineChart lineChart;
     ArrayList<Entry> pricesClose = new ArrayList<>();
 
+    // for selecting start and end date of download historical prices
     private int yearSelected;
     private int monthSelected;
+    private int currentYear;
+    private boolean shortMonthsPicker;
+    private String startDateIso, endDateIso; // format yyyy-mm-dd
 
     // msci world IE00BJ0KDQ92
     // nasdaq IE00B53SZB19
@@ -159,7 +157,14 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("für ISIN: " + isin);
                     // https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00BJ0KDQ92&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1
                     //String urlString = API_URL + "ohlc/d1/?mic=XMUN&from=2022-01-01&decimals=true&epoch=false&sorting=asc&limit=28&page=1" + "?isin=" + isin;
-                    String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=" + isin + "&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
+
+                    // variable dates from startDateIso and endDateIso
+                    String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=" + isin + "&from=" + startDateIso + "&to=" + endDateIso + "&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
+
+                    // fixed date
+                    //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=" + isin + "&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
+
+
                     //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00B53SZB19&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
                     //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00BJ0KDQ92&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
                     System.out.println("urlString: " + urlString);
@@ -202,57 +207,79 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Calendar calendar = Calendar.getInstance();
+                currentYear = calendar.get(Calendar.YEAR);
+                yearSelected = currentYear;
+                monthSelected = calendar.get(Calendar.MONTH);
+
+                shortMonthsPicker = true;
+                //currentYear = Year.now().getValue();
+                displayMonthYearPickerDialogFragment(true, false);
             }
         });
-/*
-        private MonthYearPickerDialogFragment createDialogWithRanges(boolean customTitle) {
-            final int minYear = 2010;
-            final int maxYear = currentYear;
-            final int maxMoth = 11;
-            final int minMoth = 0;
-            final int minDay = 1;
-            final int maxDay = 31;
-            long minDate;
-            long maxDate;
+    }
 
-            Calendar calendar = Calendar.getInstance();
+    private MonthYearPickerDialogFragment createDialog(boolean customTitle) {
+        return MonthYearPickerDialogFragment
+                .getInstance(monthSelected,
+                        yearSelected,
+                        customTitle ? getString(R.string.custom_title).toUpperCase() : null,
+                        shortMonthsPicker ? MonthFormat.SHORT : MonthFormat.LONG);
+    }
 
-            calendar.clear();
-            calendar.set(minYear, minMoth, minDay);
-            minDate = calendar.getTimeInMillis();
+    private MonthYearPickerDialogFragment createDialogWithRanges(boolean customTitle) {
+        final int minYear = 2010;
+        final int maxYear = currentYear;
+        final int maxMoth = 11;
+        final int minMoth = 0;
+        final int minDay = 1;
+        final int maxDay = 31;
+        long minDate;
+        long maxDate;
 
-            calendar.clear();
-            calendar.set(maxYear, maxMoth, maxDay);
-            maxDate = calendar.getTimeInMillis();
+        Calendar calendar = Calendar.getInstance();
 
-            return MonthYearPickerDialogFragment
-                    .getInstance(monthSelected,
-                            yearSelected,
-                            minDate,
-                            maxDate,
-                            customTitle ? getString(R.string.custom_title).toUpperCase() : null,
-                            shortMonthsCheckBox.isChecked() ? MonthFormat.SHORT : MonthFormat.LONG);
-        }
+        calendar.clear();
+        calendar.set(minYear, minMoth, minDay);
+        minDate = calendar.getTimeInMillis();
 
-        private void displayMonthYearPickerDialogFragment(boolean withRanges,
-        boolean customTitle) {
-            MonthYearPickerDialogFragment dialogFragment = withRanges ?
-                    createDialogWithRanges(customTitle) :
-                    createDialog(customTitle);
+        calendar.clear();
+        calendar.set(maxYear, maxMoth, maxDay);
+        maxDate = calendar.getTimeInMillis();
 
-            dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(int year, int monthOfYear) {
-                    monthSelected = monthOfYear;
-                    yearSelected = year;
-                    updateViews();
-                }
-            });
+        return MonthYearPickerDialogFragment
+                .getInstance(monthSelected,
+                        yearSelected,
+                        minDate,
+                        maxDate,
+                        customTitle ? getString(R.string.custom_title).toUpperCase() : null,
+                        shortMonthsPicker ? MonthFormat.SHORT : MonthFormat.LONG);
+    }
 
-            dialogFragment.show(getSupportFragmentManager(), null);
-        }
+    private void displayMonthYearPickerDialogFragment(boolean withRanges,
+                                                      boolean customTitle) {
+        MonthYearPickerDialogFragment dialogFragment = withRanges ?
+                createDialogWithRanges(customTitle) :
+                createDialog(customTitle);
 
- */
+        dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(int year, int monthOfYear) {
+                monthSelected = monthOfYear + 1;
+                yearSelected = year;
+                // get last date of month
+                LocalDate startDate = LocalDate.of(yearSelected, monthSelected, 1);
+                LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+                startDateIso = String.valueOf(startDate);
+                endDateIso = String.valueOf(endDate);
+                System.out.println("Range von " + startDate + " bis " + endDate);
+                EditText range = (EditText) findViewById(R.id.etStartDate);
+                range.setText(startDateIso + " bis " + endDateIso);
+                //updateViews();
+            }
+        });
+
+        dialogFragment.show(getSupportFragmentManager(), null);
     }
 
     // uses GSON
