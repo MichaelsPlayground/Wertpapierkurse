@@ -1,7 +1,6 @@
 package de.androidcrypto.wertpapierkurse;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -45,12 +44,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity_2022_02_14 extends AppCompatActivity {
     // lemon.markets docs: https://data.lemon.markets/v1/docs
 
     EditText stockIsin, stockName, date;
     DatePickerDialog datePickerDialog;
-    Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance;
+    Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -69,13 +68,11 @@ public class MainActivity extends AppCompatActivity {
     // msci world IE00BJ0KDQ92
     // nasdaq IE00B53SZB19
 
-    Intent stockMaintenanceIntent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//startActivity(showIntent);
+
         // be careful with these 2 lines
         // https://stackoverflow.com/a/9289190/8166854
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -90,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         getPrices = findViewById(R.id.btnGetPrices);
         csvSave = findViewById(R.id.btnCsvSave);
         csvLoad = findViewById(R.id.btnCsvLoad);
-
-        stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -109,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 int mMonth = c.get(Calendar.MONTH); // current month
                 int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
                 // date picker dialog
-                datePickerDialog = new DatePickerDialog(MainActivity.this,
+                datePickerDialog = new DatePickerDialog(MainActivity_2022_02_14.this,
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override

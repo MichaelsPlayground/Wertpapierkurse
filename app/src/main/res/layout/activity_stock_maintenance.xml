@@ -81,6 +81,25 @@
         android:minHeight="48dp"
         android:textSize="14sp" />
 
+    <Button
+        android:id="@+id/btnAddStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="WP hinzufuegen" />
+
+    <Button
+        android:id="@+id/btnListStocks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="WP hinzufuegen" />
+
+
     <TextView
         android:id="@+id/tvDuration"
         android:layout_width="wrap_content"
@@ -148,21 +167,6 @@
             android:text="CSV Load" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnStockMaintenance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="Stock maintenance" />
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/activity_main_linechart"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
 
 
 </LinearLayout>
