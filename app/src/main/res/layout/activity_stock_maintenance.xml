@@ -16,7 +16,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Wertpapierkurse abfragen"
+        android:text="Wertpapierkursliste"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -97,7 +97,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="WP hinzufuegen" />
+        android:text="WP Liste anzeigen" />
 
 
     <TextView

@@ -14,16 +14,23 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StockMaintenance extends AppCompatActivity {
 
+    final String stockListFileName = "stocks.txt";
+    List<String[]> csvStockList = new ArrayList<>();
+    String[] csvStockHeader = {"isin", "name"};
+
     EditText stockIsin, stockName;
 
-    Button getStockName, csvSave, csvLoad;
+    Button getStockName, addStock, listStocks, csvSave, csvLoad;
     String API_URL = "https://data.lemon.markets/v1/";
 
     @Override
@@ -34,6 +41,9 @@ public class StockMaintenance extends AppCompatActivity {
         stockIsin = findViewById(R.id.etIsin);
         stockName = findViewById(R.id.etStockName);
         getStockName = findViewById(R.id.btnSearchIsin);
+        addStock = findViewById(R.id.btnAddStock);
+        listStocks = findViewById(R.id.btnListStocks);
+
 
 
         getStockName.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +76,32 @@ public class StockMaintenance extends AppCompatActivity {
                     e.printStackTrace();
                     System.out.println("Error: " + e);
                     stockName.setText("Fehler, ISIN nicht gefunden");
+                }
+            }
+        });
+
+        addStock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // todo wichtig: alte liste vorher einlesen
+                // todo check das die felder isin und wertpapiername gefüllt sind
+
+                Editable isin = stockIsin.getText();
+                Editable isinStockName = stockName.getText();
+                csvStockList.add(csvStockHeader);
+                String[] csvRecord = {String.valueOf(isin), String.valueOf(isinStockName)};
+                csvStockList.add(csvRecord);
+
+                String path = getFilesDir().getAbsolutePath();
+                String csvFilenameComplete = path + "/" + stockListFileName;
+                System.out.println("csv file storing: " + csvFilenameComplete);
+                CsvWriterSimple writer = new CsvWriterSimple();
+                try {
+                    writer.writeToCsvFile(csvStockList, new File(csvFilenameComplete));
+                    System.out.println("csv file written");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });

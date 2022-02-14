@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//startActivity(showIntent);
+
         // be careful with these 2 lines
         // https://stackoverflow.com/a/9289190/8166854
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         getPrices = findViewById(R.id.btnGetPrices);
         csvSave = findViewById(R.id.btnCsvSave);
         csvLoad = findViewById(R.id.btnCsvLoad);
+        stockMaintenance = findViewById(R.id.btnStockMaintenance);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
 
@@ -269,6 +270,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        stockMaintenance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(stockMaintenanceIntent);
             }
         });
     }
