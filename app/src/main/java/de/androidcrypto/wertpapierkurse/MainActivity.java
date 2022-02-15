@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
     // msci world IE00BJ0KDQ92
     // nasdaq IE00B53SZB19
+    // s&p 500 IE00B5BMR087
+    // emerging markets IE00BTJRMP35
+    // msci world information IE00BM67HT60
 
     Intent stockMaintenanceIntent;
 

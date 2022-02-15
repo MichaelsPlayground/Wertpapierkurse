@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StockMaintenance extends AppCompatActivity {
@@ -28,9 +29,11 @@ public class StockMaintenance extends AppCompatActivity {
     List<String[]> csvStockList = new ArrayList<>();
     String[] csvStockHeader = {"isin", "name"};
 
-    EditText stockIsin, stockName;
+    List<String[]> result = null; // filled by loadStocksList
 
-    Button getStockName, addStock, listStocks, csvSave, csvLoad;
+    EditText stockIsin, stockName, stocksList;
+
+    Button getStockName, addStock, listStocks, csvSave, csvLoad, isinLoeschen;
     String API_URL = "https://data.lemon.markets/v1/";
 
     @Override
@@ -40,11 +43,21 @@ public class StockMaintenance extends AppCompatActivity {
 
         stockIsin = findViewById(R.id.etIsin);
         stockName = findViewById(R.id.etStockName);
+        stocksList = findViewById(R.id.etStocksList);
+        isinLoeschen = findViewById(R.id.btnIsinDelete);
         getStockName = findViewById(R.id.btnSearchIsin);
         addStock = findViewById(R.id.btnAddStock);
         listStocks = findViewById(R.id.btnListStocks);
 
+        // one time only set
+        csvStockList.add(csvStockHeader);
 
+        isinLoeschen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stockIsin.setText("");
+            }
+        });
 
         getStockName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,10 +102,19 @@ public class StockMaintenance extends AppCompatActivity {
 
                 Editable isin = stockIsin.getText();
                 Editable isinStockName = stockName.getText();
-                csvStockList.add(csvStockHeader);
+                //csvStockList.add(csvStockHeader);
                 String[] csvRecord = {String.valueOf(isin), String.valueOf(isinStockName)};
-                csvStockList.add(csvRecord);
 
+                // check if stocks list file exists, if not create one with header
+                stocksListExists();
+                // now load the existing file
+                int records = 0;
+                records = loadStocksList();
+                // add the new record
+                csvStockList.add(csvRecord);
+                // delete the old file
+                stocksListDeleteFile();
+                // store the new file with complete list in memory
                 String path = getFilesDir().getAbsolutePath();
                 String csvFilenameComplete = path + "/" + stockListFileName;
                 System.out.println("csv file storing: " + csvFilenameComplete);
@@ -103,6 +125,46 @@ public class StockMaintenance extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        listStocks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int records = 0;
+                records = loadStocksList();
+                System.out.println("listStocks records: " + records);
+                /*
+                String path = getFilesDir().getAbsolutePath();
+                String csvFilenameComplete = path + "/" + stockListFileName;
+                System.out.println("file reading: " + csvFilenameComplete);
+                // check if file exists before reading
+                File csvReadingFile = new File(csvFilenameComplete);
+                boolean csvReadingFileExists = csvReadingFile.exists();
+                System.out.println("The file is existing: " + csvReadingFileExists);
+                String completeContent = "";
+                if (csvReadingFileExists) {
+                    try {
+                        CsvParserSimple obj = new CsvParserSimple();
+                        List<String[]> result = null;
+                        result = obj.readFile(csvReadingFile, 1);
+                        int listIndex = 0;
+                        for (String[] arrays : result) {
+                            System.out.println("\nString[" + listIndex++ + "] : " + Arrays.toString(arrays));
+                            completeContent = completeContent + "[nr " + listIndex + "] : " + Arrays.toString(arrays) + "\n";
+                            completeContent = completeContent + "-----------------\n";
+                            int index = 0;
+                            for (String array : arrays) {
+                                System.out.println(index++ + " : " + array);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+*/
+
             }
         });
     }
@@ -127,5 +189,86 @@ public class StockMaintenance extends AppCompatActivity {
             stockName.setText(post_id);
         }
 
+    }
+
+    public void stocksListExists() {
+        String path = getFilesDir().getAbsolutePath();
+        String csvFilenameComplete = path + "/" + stockListFileName;
+        System.out.println("file reading: " + csvFilenameComplete);
+        // check if file exists before reading
+        File csvReadingFile = new File(csvFilenameComplete);
+        boolean csvReadingFileExists = csvReadingFile.exists();
+        System.out.println("The file is existing: " + csvReadingFileExists);
+        if (!csvReadingFileExists) {
+            CsvWriterSimple writer = new CsvWriterSimple();
+            try {
+                writer.writeToCsvFile(csvStockList, new File(csvFilenameComplete));
+                System.out.println("csv file written");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void stocksListDeleteFile() {
+        String path = getFilesDir().getAbsolutePath();
+        String csvFilenameComplete = path + "/" + stockListFileName;
+        System.out.println("file reading: " + csvFilenameComplete);
+        // check if file exists before reading
+        File csvReadingFile = new File(csvFilenameComplete);
+        boolean csvReadingFileExists = csvReadingFile.exists();
+        System.out.println("The file is existing: " + csvReadingFileExists);
+        if (csvReadingFileExists) {
+            csvReadingFile.delete();
+            System.out.println("csv file deleted");
+        }
+    }
+
+    public int loadStocksList() {
+        int records = 0;
+        String path = getFilesDir().getAbsolutePath();
+        String csvFilenameComplete = path + "/" + stockListFileName;
+        System.out.println("file reading: " + csvFilenameComplete);
+        // check if file exists before reading
+        File csvReadingFile = new File(csvFilenameComplete);
+        boolean csvReadingFileExists = csvReadingFile.exists();
+        System.out.println("The file is existing: " + csvReadingFileExists);
+        String completeContent = "";
+        if (csvReadingFileExists) {
+            try {
+                CsvParserSimple obj = new CsvParserSimple();
+                //List<String[]> result = null;
+                result = obj.readFile(csvReadingFile, 1);
+                int listIndex = 0;
+                for (String[] arrays : result) {
+                    System.out.println("\nString[" + listIndex++ + "] : " + Arrays.toString(arrays));
+                    String listIndex2Digit = String.format("%02d", listIndex);
+                    //completeContent = completeContent + "[nr " + listIndex2Digit + "] : " + Arrays.toString(arrays) + "\n";
+                    completeContent = completeContent + listIndex2Digit + " " + Arrays.toString(arrays).replace("[", "").replaceAll("]", "") + "\n";
+                    //completeContent = completeContent + "-----------------\n";
+
+                    int index = 0;
+                    String isin = "";
+                    String isinStockName = "";
+                    for (String array : arrays) {
+                        System.out.println(index++ + " : " + array);
+                        if (index == 1) {
+                            isin = array;
+                        }
+                        if (index == 2) {
+                            isinStockName = array;
+                        }
+                    }
+                    String[] csvRecord = {String.valueOf(isin), String.valueOf(isinStockName)};
+                    csvStockList.add(csvRecord);
+                }
+                stocksList.setText(completeContent);
+                records = listIndex;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return records;
     }
 }
