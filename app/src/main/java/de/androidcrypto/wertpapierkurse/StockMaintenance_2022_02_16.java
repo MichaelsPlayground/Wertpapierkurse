@@ -1,13 +1,12 @@
 package de.androidcrypto.wertpapierkurse;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StockMaintenance extends AppCompatActivity {
+public class StockMaintenance_2022_02_16 extends AppCompatActivity {
 
     final String stockListFileName = "stocks.txt";
     List<String[]> csvStockList = new ArrayList<>();
@@ -48,10 +47,9 @@ public class StockMaintenance extends AppCompatActivity {
         getStockName = findViewById(R.id.btnSearchIsin);
         addStock = findViewById(R.id.btnAddStock);
         listStocks = findViewById(R.id.btnListStocks);
-        deleteStock = findViewById(R.id.btnDeleteStock);
 
         // one time only set
-        //csvStockList.add(csvStockHeader);
+        csvStockList.add(csvStockHeader);
 
         isinLoeschen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,21 +173,6 @@ public class StockMaintenance extends AppCompatActivity {
             }
         });
 
-        deleteStock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // first list available stocks
-                // check if stocks list file exists, if not create one with header
-                stocksListExists();
-                // now load the existing file
-                int records = 0;
-                records = loadStocksList();
-                System.out.println("deleteStock size: " + records);
-
-                // todo delete entry in memory and rewrite the complete list to file
-
-            }
-        });
     }
 
     // uses GSON
@@ -296,6 +279,4 @@ public class StockMaintenance extends AppCompatActivity {
 
         return records;
     }
-
-
 }

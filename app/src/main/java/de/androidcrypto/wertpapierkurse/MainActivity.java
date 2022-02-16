@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     // s&p 500 IE00B5BMR087
     // emerging markets IE00BTJRMP35
     // msci world information IE00BM67HT60
+    // commodities DE000A0H0728
 
     Intent stockMaintenanceIntent;
 
