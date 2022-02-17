@@ -16,10 +16,36 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Wertpapierkurse abfragen"
+        android:text="Download historischer Preise"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnDlListStocks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="WP Liste anzeigen" />
+
+    <EditText
+        android:id="@+id/etDlStocksList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:gravity="start|top"
+        android:hint="the stocks list comes here"
+        android:inputType="textMultiLine"
+        android:lines="5"
+        android:textAlignment="textStart"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tvIsin"
@@ -148,31 +174,14 @@
             android:text="CSV Load" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btnStockMaintenance"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <Button
-            android:id="@+id/btnStockMaintenance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Stock maintenance" />
-
-        <Button
-            android:id="@+id/btnDownloadHistoricPrices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Download hist. Preise" />
-
-    </LinearLayout>
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Stock maintenance" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/activity_main_linechart"

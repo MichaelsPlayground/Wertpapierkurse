@@ -45,12 +45,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity_2022_02_17 extends AppCompatActivity {
     // lemon.markets docs: https://data.lemon.markets/v1/docs
 
     EditText stockIsin, stockName, date;
     DatePickerDialog datePickerDialog;
-    Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
+    Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     // msci world information IE00BM67HT60
     // commodities DE000A0H0728
 
-    Intent stockMaintenanceIntent, downloadHistoricPricesIntent;
+    Intent stockMaintenanceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +95,8 @@ public class MainActivity extends AppCompatActivity {
         csvSave = findViewById(R.id.btnCsvSave);
         csvLoad = findViewById(R.id.btnCsvLoad);
         stockMaintenance = findViewById(R.id.btnStockMaintenance);
-        downloadHistoricPrices = findViewById(R.id.btnDownloadHistoricPrices);
 
-        stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
-        downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
+        stockMaintenanceIntent = new Intent(MainActivity_2022_02_17.this, StockMaintenance.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 int mMonth = c.get(Calendar.MONTH); // current month
                 int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
                 // date picker dialog
-                datePickerDialog = new DatePickerDialog(MainActivity.this,
+                datePickerDialog = new DatePickerDialog(MainActivity_2022_02_17.this,
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
@@ -283,13 +281,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(stockMaintenanceIntent);
-            }
-        });
-
-        downloadHistoricPrices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(downloadHistoricPricesIntent);
             }
         });
     }

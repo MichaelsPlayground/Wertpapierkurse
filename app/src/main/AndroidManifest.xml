@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wertpapierkurse">
         <activity
+            android:name=".DownloadHistoricPrices"
+            android:exported="false" />
+        <activity
             android:name=".StockMaintenance"
             android:exported="false" />
         <activity
