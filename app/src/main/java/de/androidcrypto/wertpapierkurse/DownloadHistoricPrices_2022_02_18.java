@@ -26,6 +26,8 @@ import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,6 +44,8 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
 
@@ -84,8 +88,6 @@ public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
         selectedDate = findViewById(R.id.etDlSelectedDate);
         downloadResult = findViewById(R.id.etDlAllStocksResult);
         etEmailAddress = findViewById(R.id.etEmailAddress);
-
-
 
 
         listStocks.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +215,7 @@ public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
                 System.out.println("writeSuccess: " + writeSuccess);
                 //if (writeSuccess) {
 
-                    //filename = "IE00BJ0KDQ92_2022-02.txt";
+                //filename = "IE00BJ0KDQ92_2022-02.txt";
 /*
                     File filePath = new File(getFilesDir(), subfolder);
                     File fullFile = new File(filePath, filename);
@@ -221,38 +223,38 @@ public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
                     Uri contentUri = getUriForFile(context, "de.androidcrypto.wertpapierkurse.provider", fullFile);
                     System.out.println("contentUri: " + contentUri);
 */
-                    // build the emailIntent
-                    try {
-                        //String email = "test@test.com"; // change to a real email address you control
-                        String email = emailAddress;
-                        String subject = "email subject internal";
-                        String message = "email message";
-                        final Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                        emailIntent.setType("plain/text");
-                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                        //emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        //emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                // build the emailIntent
+                try {
+                    //String email = "test@test.com"; // change to a real email address you control
+                    String email = emailAddress;
+                    String subject = "email subject internal";
+                    String message = "email message";
+                    final Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setType("plain/text");
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                    //emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    //emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-                        // iterate through filenameCsvList
-                        //emailIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-                        // now just 1 file
-                        String filename = filenameCsvList.get(1);
-                        System.out.println("filename: " + filename);
-                        File filePath = new File(getFilesDir(), subfolder);
-                        File fullFile = new File(filePath, filename);
-                        Context context = getApplicationContext();
-                        Uri contentUri = getUriForFile(context, "de.androidcrypto.wertpapierkurse.provider", fullFile);
-                        System.out.println("contentUri: " + contentUri);
-                        //uris.add(contentUri);
+                    // iterate through filenameCsvList
+                    //emailIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                    // now just 1 file
+                    String filename = filenameCsvList.get(1);
+                    System.out.println("filename: " + filename);
+                    File filePath = new File(getFilesDir(), subfolder);
+                    File fullFile = new File(filePath, filename);
+                    Context context = getApplicationContext();
+                    Uri contentUri = getUriForFile(context, "de.androidcrypto.wertpapierkurse.provider", fullFile);
+                    System.out.println("contentUri: " + contentUri);
+                    //uris.add(contentUri);
 
-                        if (contentUri != null) {
-                            System.out.println("contentUri is not null");
-                            emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                            //emailIntent.putExtra(Intent.EXTRA_STREAM, uris);
-                        }
+                    if (contentUri != null) {
+                        System.out.println("contentUri is not null");
+                        emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                        //emailIntent.putExtra(Intent.EXTRA_STREAM, uris);
+                    }
 
 /*
                         filename = filenameCsvList.get(1);
@@ -273,28 +275,28 @@ public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
                             emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                         }
 */
-  //                      ArrayList<CharSequence> messageList = new ArrayList<>();
-  //                      messageList.add(message);
-                        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
-                        //emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, messageList);
-                        System.out.println("before MainActivity.this.startActivity");
+                    //                      ArrayList<CharSequence> messageList = new ArrayList<>();
+                    //                      messageList.add(message);
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+                    //emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, messageList);
+                    System.out.println("before MainActivity.this.startActivity");
 
-                        // new no further error
-                        // source: https://stackoverflow.com/a/59439316/8166854
-                        Intent chooser = Intent.createChooser(emailIntent, "Share File");
-                        List<ResolveInfo> resInfoList = DownloadHistoricPrices_2022_02_18.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
-                        for (ResolveInfo resolveInfo : resInfoList) {
-                            String packageName = resolveInfo.activityInfo.packageName;
-                            DownloadHistoricPrices_2022_02_18.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        }
-                        startActivity(chooser);
-
-                        System.out.println("after MainActivity.this.startActivity");
-                    } catch (SecurityException e) {
-                        System.out.println("error: " + e.toString());
-                        Toast.makeText(DownloadHistoricPrices_2022_02_18.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
+                    // new no further error
+                    // source: https://stackoverflow.com/a/59439316/8166854
+                    Intent chooser = Intent.createChooser(emailIntent, "Share File");
+                    List<ResolveInfo> resInfoList = DownloadHistoricPrices_2022_02_18.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+                    for (ResolveInfo resolveInfo : resInfoList) {
+                        String packageName = resolveInfo.activityInfo.packageName;
+                        DownloadHistoricPrices_2022_02_18.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     }
+                    startActivity(chooser);
+
+                    System.out.println("after MainActivity.this.startActivity");
+                } catch (SecurityException e) {
+                    System.out.println("error: " + e.toString());
+                    Toast.makeText(DownloadHistoricPrices_2022_02_18.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
                 }
+            }
             //}
 
 /*
@@ -405,7 +407,7 @@ public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
                     System.out.println("loadStocksList nach adding: " + csvStockList.size());
                 }
                 records = listIndex;
-                if (records > 0){
+                if (records > 0) {
                     stocksList.setText(completeContent);
                 } else {
                     stocksList.setText(("*** FEHLER *** noch keine Wertpapierliste erfasst"));
@@ -513,7 +515,7 @@ public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            long unixTime = (long) dateUnix.getTime()/1000;
+            long unixTime = (long) dateUnix.getTime() / 1000;
             //System.out.println(unixTime );//<- prints 1352504418
             //Float dateFloat = Float.parseFloat(unixTime);
             float dateFloat = Float.valueOf(unixTime);
@@ -529,31 +531,31 @@ public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
     }
 
     // just for testing
-        private boolean writeFileToInternalStorage(String filename, String path, byte[] data) {
-            try {
-                File dir=new File(getFilesDir(), path);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                System.out.println("** dir: " + dir.toString());
-                File newFile = new File(dir, filename);
-                System.out.println("newFile: " + newFile.toString());
-                FileOutputStream output = new FileOutputStream(new File(dir, filename));
-                ByteArrayInputStream input = new ByteArrayInputStream(data);
-                int DEFAULT_BUFFER_SIZE = 1024;
-                byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-                int n = 0;
-                n = input.read(buffer, 0, DEFAULT_BUFFER_SIZE);
-                while (n >= 0) {
-                    output.write(buffer, 0, n);
-                    n = input.read(buffer, 0, DEFAULT_BUFFER_SIZE);
-                }
-                output.close();
-                input.close();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+    private boolean writeFileToInternalStorage(String filename, String path, byte[] data) {
+        try {
+            File dir = new File(getFilesDir(), path);
+            if (!dir.exists()) {
+                dir.mkdirs();
             }
+            System.out.println("** dir: " + dir.toString());
+            File newFile = new File(dir, filename);
+            System.out.println("newFile: " + newFile.toString());
+            FileOutputStream output = new FileOutputStream(new File(dir, filename));
+            ByteArrayInputStream input = new ByteArrayInputStream(data);
+            int DEFAULT_BUFFER_SIZE = 1024;
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int n = 0;
+            n = input.read(buffer, 0, DEFAULT_BUFFER_SIZE);
+            while (n >= 0) {
+                output.write(buffer, 0, n);
+                n = input.read(buffer, 0, DEFAULT_BUFFER_SIZE);
+            }
+            output.close();
+            input.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
+    }
 }

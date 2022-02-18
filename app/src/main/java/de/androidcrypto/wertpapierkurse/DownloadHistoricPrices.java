@@ -29,6 +29,7 @@ import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,6 +46,8 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class DownloadHistoricPrices extends AppCompatActivity {
 
@@ -559,4 +562,30 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                 return false;
             }
         }
+
+    private boolean zipMultipleFiles(List<String> srcFiles, String zipFilename) {
+        boolean result = false;
+        try {
+            FileOutputStream fos = new FileOutputStream(zipFilename);
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
+            for (String srcFile : srcFiles) {
+                File fileToZip = new File(srcFile);
+                FileInputStream fis = new FileInputStream(fileToZip);
+                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                zipOut.putNextEntry(zipEntry);
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = fis.read(bytes)) >= 0) {
+                    zipOut.write(bytes, 0, length);
+                }
+                fis.close();
+            }
+            zipOut.close();
+            fos.close();
+            result = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
