@@ -113,26 +113,4 @@
         android:textAlignment="textStart"
         android:textSize="12sp" />
 
-    <EditText
-        android:id="@+id/etEmailAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-
-        android:hint="enter your email address here"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:text="fehr.michael@icloud.com" />
-
-    <Button
-        android:id="@+id/btnDlEmailAllStocksPrices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="WP Kurse als Email-Anhang versenden" />
-
 </LinearLayout>

@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "de.androidcrypto.wertpapierkurse"
         minSdk 26
-        targetSdk 31
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 

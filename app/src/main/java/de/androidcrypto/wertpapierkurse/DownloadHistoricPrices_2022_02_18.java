@@ -2,21 +2,18 @@ package de.androidcrypto.wertpapierkurse;
 
 import static androidx.core.content.FileProvider.getUriForFile;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.dewinjm.monthyearpicker.MonthFormat;
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialog;
@@ -46,7 +43,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class DownloadHistoricPrices extends AppCompatActivity {
+public class DownloadHistoricPrices_2022_02_18 extends AppCompatActivity {
 
     final String stockListFileName = "stocks.txt";
     List<String[]> csvStockList = new ArrayList<>();
@@ -230,10 +227,10 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                         String email = emailAddress;
                         String subject = "email subject internal";
                         String message = "email message";
-                        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        final Intent emailIntent = new Intent(Intent.ACTION_SEND);
                         emailIntent.setType("plain/text");
-                        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
-                        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
                         //emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                         emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -278,24 +275,24 @@ public class DownloadHistoricPrices extends AppCompatActivity {
 */
   //                      ArrayList<CharSequence> messageList = new ArrayList<>();
   //                      messageList.add(message);
-                        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+                        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
                         //emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, messageList);
                         System.out.println("before MainActivity.this.startActivity");
 
                         // new no further error
                         // source: https://stackoverflow.com/a/59439316/8166854
                         Intent chooser = Intent.createChooser(emailIntent, "Share File");
-                        List<ResolveInfo> resInfoList = DownloadHistoricPrices.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+                        List<ResolveInfo> resInfoList = DownloadHistoricPrices_2022_02_18.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
                         for (ResolveInfo resolveInfo : resInfoList) {
                             String packageName = resolveInfo.activityInfo.packageName;
-                            DownloadHistoricPrices.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            DownloadHistoricPrices_2022_02_18.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         }
                         startActivity(chooser);
 
                         System.out.println("after MainActivity.this.startActivity");
                     } catch (SecurityException e) {
                         System.out.println("error: " + e.toString());
-                        Toast.makeText(DownloadHistoricPrices.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(DownloadHistoricPrices_2022_02_18.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
             //}
