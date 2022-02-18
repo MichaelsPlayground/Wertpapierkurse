@@ -6,4 +6,7 @@
     <files-path
         name="internal"
         path="." />
+    <cache-path
+        name="my_cache"
+        path="." />
 </paths>
