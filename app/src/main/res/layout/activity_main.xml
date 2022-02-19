@@ -160,17 +160,26 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="4dp"
-            android:text="Stock maintenance" />
+            android:layout_marginEnd="2dp"
+            android:text="Stock maint." />
 
         <Button
             android:id="@+id/btnDownloadHistoricPrices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="2dp"
             android:text="DL hist. Preise" />
+
+        <Button
+            android:id="@+id/btnShowPriceChart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="Chart" />
 
     </LinearLayout>
 

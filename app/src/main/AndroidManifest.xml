@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wertpapierkurse">
         <activity
+            android:name=".ShowPriceChart"
+            android:exported="false" />
+        <activity
             android:name=".DownloadHistoricPrices"
             android:exported="false" />
         <activity
@@ -32,11 +35,12 @@
             android:authorities="de.androidcrypto.wertpapierkurse.provider"
             android:exported="false"
             android:grantUriPermissions="true">
+
             <!-- ressource file to create -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
-            </meta-data>
+                android:resource="@xml/file_paths"></meta-data>
         </provider>
     </application>
+
 </manifest>

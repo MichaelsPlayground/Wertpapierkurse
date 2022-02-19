@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/layout/activity_download_historic_prices.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.125" />
         <entry key="app/src/main/res/layout/activity_main_constraint.xml" value="0.1344984802431611" />
+        <entry key="app/src/main/res/layout/activity_show_price_chart.xml" value="0.12364130434782608" />
         <entry key="app/src/main/res/layout/activity_stock_maintenance.xml" value="0.1" />
       </map>
     </option>

@@ -167,7 +167,7 @@ public class DownloadHistoricPrices extends AppCompatActivity {
 
                         parsePrices(dataName);
 
-                        // todo store in year-month yyyy-mm directories, not in files
+                        // store in year-month yyyy-mm directories, not in files
                         String ymDirectory = yearSelected + "-" +
                                 String.format(Locale.GERMANY, "%02d", monthSelected);
                         File baseDir = new File(getFilesDir(), ymDirectory);
@@ -220,6 +220,8 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                 String emailAddress = etEmailAddress.getText().toString();
                 ArrayList<Uri> uris = new ArrayList<>(); // for multiple files
 
+                // stored in year-month yyyy-mm directories, not in files
+                // diese routine findet daher die erzeugten dateien NICHT
 
                 //String filename = "testInternal.txt";
                 //String subfolder = "tdat";
@@ -397,6 +399,8 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                 String emailAddress = etEmailAddress.getText().toString();
                 ArrayList<Uri> uris = new ArrayList<>(); // for multiple files
 
+                // stored in year-month yyyy-mm directories, not in files
+                // diese routine findet daher die erzeugten dateien NICHT
 
                 //String filename = "testInternal.txt";;
                 //String subfolder = "tdat";

@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     EditText stockIsin, stockName, date;
     DatePickerDialog datePickerDialog;
     Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
+    Button showPriceChart;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     // msci world information IE00BM67HT60
     // commodities DE000A0H0728
 
-    Intent stockMaintenanceIntent, downloadHistoricPricesIntent;
+    Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +97,11 @@ public class MainActivity extends AppCompatActivity {
         csvLoad = findViewById(R.id.btnCsvLoad);
         stockMaintenance = findViewById(R.id.btnStockMaintenance);
         downloadHistoricPrices = findViewById(R.id.btnDownloadHistoricPrices);
+        showPriceChart = findViewById(R.id.btnShowPriceChart);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
+        showPriceChartIntent = new Intent(MainActivity.this, ShowPriceChart.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -290,6 +293,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(downloadHistoricPricesIntent);
+            }
+        });
+
+        showPriceChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(showPriceChartIntent);
             }
         });
     }
