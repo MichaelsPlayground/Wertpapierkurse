@@ -2,21 +2,18 @@ package de.androidcrypto.wertpapierkurse;
 
 import static androidx.core.content.FileProvider.getUriForFile;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.dewinjm.monthyearpicker.MonthFormat;
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialog;
@@ -46,11 +43,10 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class DownloadHistoricPrices extends AppCompatActivity {
+public class DownloadHistoricPrices_2022_02_19 extends AppCompatActivity {
 
     final String stockListFileName = "stocks.txt";
     List<String[]> csvStockList = new ArrayList<>();
@@ -167,22 +163,17 @@ public class DownloadHistoricPrices extends AppCompatActivity {
 
                         parsePrices(dataName);
 
-                        // todo store in year-month yyyy-mm directories, not in files
-                        String ymDirectory = yearSelected + "-" +
-                                String.format(Locale.GERMANY, "%02d", monthSelected);
-                        File baseDir = new File(getFilesDir(), ymDirectory);
-                        if (!baseDir.exists()) {
-                            baseDir.mkdirs();
-                        }
+                        // todo store in year-month directories, not in files
+                        String path = getFilesDir().getAbsolutePath();
                         String csvFilename = isin + "_" +
                                 yearSelected + "-" +
-                                String.format(Locale.GERMANY, "%02d", monthSelected) + ".csv";
-                        String csvFilenameComplete = baseDir + "/" + csvFilename;
+                                String.format("%02d", monthSelected) + ".csv";
+                        String csvFilenameComplete = path + "/" + csvFilename;
                         System.out.println("csv file storing: " + csvFilenameComplete);
                         filenameCsvList.add(csvFilename);
                         CsvWriterSimple writer = new CsvWriterSimple();
                         try {
-                            writer.writeToCsvFile(csvList, new File(baseDir, csvFilename));
+                            writer.writeToCsvFile(csvList, new File(csvFilenameComplete));
                             System.out.println("csv file written for ISIN " + isin);
                             downloadResult.append("csv written for ISIN " + isin
                                     + " " + startDateIso + " to " + endDateIso + "\n");
@@ -244,10 +235,10 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                     String email = emailAddress;
                     String subject = "email subject internal";
                     String message = "email message";
-                    final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    final Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     emailIntent.setType("plain/text");
-                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
-                    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
                     //emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -292,24 +283,24 @@ public class DownloadHistoricPrices extends AppCompatActivity {
 */
                     //                      ArrayList<CharSequence> messageList = new ArrayList<>();
                     //                      messageList.add(message);
-                    emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, message);
                     //emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, messageList);
                     System.out.println("before MainActivity.this.startActivity");
 
                     // new no further error
                     // source: https://stackoverflow.com/a/59439316/8166854
                     Intent chooser = Intent.createChooser(emailIntent, "Share File");
-                    List<ResolveInfo> resInfoList = DownloadHistoricPrices.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+                    List<ResolveInfo> resInfoList = DownloadHistoricPrices_2022_02_19.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
                     for (ResolveInfo resolveInfo : resInfoList) {
                         String packageName = resolveInfo.activityInfo.packageName;
-                        DownloadHistoricPrices.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        DownloadHistoricPrices_2022_02_19.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     }
                     startActivity(chooser);
 
                     System.out.println("after MainActivity.this.startActivity");
                 } catch (SecurityException e) {
                     System.out.println("error: " + e.toString());
-                    Toast.makeText(DownloadHistoricPrices.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(DownloadHistoricPrices_2022_02_19.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
                 }
             }
             //}
@@ -415,100 +406,6 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                     String email = emailAddress;
                     String subject = "email subject internal";
                     String message = "email message";
-                    final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    emailIntent.setType("plain/text");
-                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
-                    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-                    //emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    //emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-                    // iterate through filenameCsvList
-                    //emailIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-                    // now just 1 file
-                    String filename = zipFilename;
-                    System.out.println("filename: " + filename);
-                    //File filePath = new File(getFilesDir(), subfolder);
-                    File filePath = new File(getCacheDir(), subfolder); // todo using the cache dir
-                    File fullFile = new File(filePath, filename);
-                    Context context = getApplicationContext();
-                    Uri contentUri = getUriForFile(context, "de.androidcrypto.wertpapierkurse.provider", fullFile);
-                    System.out.println("contentUri: " + contentUri);
-                    //uris.add(contentUri);
-
-                    if (contentUri != null) {
-                        System.out.println("contentUri is not null");
-                        emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                        //emailIntent.putExtra(Intent.EXTRA_STREAM, uris);
-                    }
-
-                    //                      ArrayList<CharSequence> messageList = new ArrayList<>();
-                    //                      messageList.add(message);
-                    emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
-                    //emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, messageList);
-                    System.out.println("before MainActivity.this.startActivity");
-
-                    // new no further error
-                    // source: https://stackoverflow.com/a/59439316/8166854
-                    Intent chooser = Intent.createChooser(emailIntent, "Share File");
-                    List<ResolveInfo> resInfoList = DownloadHistoricPrices.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        DownloadHistoricPrices.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    }
-                    startActivity(chooser);
-
-                    System.out.println("after MainActivity.this.startActivity");
-                } catch (SecurityException e) {
-                    System.out.println("error: " + e.toString());
-                    Toast.makeText(DownloadHistoricPrices.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
-                }
-
-            }
-
-// todo store email address in shared preferences
-            // todo put an error dialog here
-
-        });
-
-        // this is indepent from an actual download as it will email all files
-        // in a subfolder (yyyy-mm) in zipped form
-        emailZipDirectoryAllStockPrices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("*** email directory ***");
-                //System.out.println("records in filenameCsvList: " + filenameCsvList.size());
-
-                // now we just zip the files
-
-                String zipFilename = stocksPricesZipFilename + "_" +
-                        yearSelected + "-" +
-                        String.format("%02d", monthSelected) + ".zip";
-                //String zipFilename = "zipfiles.zip"; // todo change to include month & year
-                boolean zipSuccess = zipDirectory("", "", zipFilename);
-                System.out.println("zipping success : " + zipSuccess);
-                // todo check for zipping success
-                String emailAddress = etEmailAddress.getText().toString();
-                ArrayList<Uri> uris = new ArrayList<>(); // for multiple files
-
-                //String filename = "testInternal.txt";;
-                //String subfolder = "tdat";
-                String subfolder = "";
-
-                //boolean writeSuccess = writeFileToInternalStorage(filename, subfolder, data);
-                boolean writeSuccess = true;
-                System.out.println("writeSuccess: " + writeSuccess);
-                //if (writeSuccess) {
-
-                //filename = "IE00BJ0KDQ92_2022-02.txt";
-
-                // build the emailIntent
-                try {
-                    //String email = "test@test.com"; // change to a real email address you control
-                    String email = emailAddress;
-                    String subject = "email subject internal";
-                    String message = "email message";
                     final Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     emailIntent.setType("plain/text");
                     emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
@@ -546,17 +443,17 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                     // new no further error
                     // source: https://stackoverflow.com/a/59439316/8166854
                     Intent chooser = Intent.createChooser(emailIntent, "Share File");
-                    List<ResolveInfo> resInfoList = DownloadHistoricPrices.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+                    List<ResolveInfo> resInfoList = DownloadHistoricPrices_2022_02_19.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
                     for (ResolveInfo resolveInfo : resInfoList) {
                         String packageName = resolveInfo.activityInfo.packageName;
-                        DownloadHistoricPrices.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        DownloadHistoricPrices_2022_02_19.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     }
                     startActivity(chooser);
 
                     System.out.println("after MainActivity.this.startActivity");
                 } catch (SecurityException e) {
                     System.out.println("error: " + e.toString());
-                    Toast.makeText(DownloadHistoricPrices.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(DownloadHistoricPrices_2022_02_19.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
                 }
             }
 // todo store email address in shared preferences
@@ -565,6 +462,7 @@ public class DownloadHistoricPrices extends AppCompatActivity {
 
 
     }
+
 
     public int loadStocksList() {
         records = 0;
@@ -759,7 +657,7 @@ public class DownloadHistoricPrices extends AppCompatActivity {
         }
     }
 
-    // source:
+    // source: https://www.baeldung.com/java-compress-and-uncompress
     // unzipping on mac gives error, check in terminal
     // unzip -t zipfiles.zip | tail -1
     /*
@@ -805,61 +703,4 @@ public class DownloadHistoricPrices extends AppCompatActivity {
         }
         return result;
     }
-
-    // source: https://www.baeldung.com/java-compress-and-uncompress
-    private boolean zipDirectory(String sourceDirectory, String zipPath, String zipFilename) {
-        boolean result = false;
-        try {
-            //File zipDir = new File(getFilesDir(), zipPath);
-            File zipDir = new File(getCacheDir(), zipPath); // todo check for cacheDir
-            if (!zipDir.exists()) {
-                zipDir.mkdirs();
-            }
-            System.out.println("** zipDir: " + zipDir.toString());
-            File newFile = new File(zipDir, zipFilename);
-            System.out.println("newFile: " + newFile.toString());
-
-            FileOutputStream fos = new FileOutputStream(new File(zipDir, zipFilename));
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-            File fileToZip = new File(getFilesDir(), sourceDirectory);
-            zipFile(fileToZip, fileToZip.getName(), zipOut);
-            zipOut.close();
-            fos.close();
-            result = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    // sub procedure from zipDirectory
-    private static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
-        if (fileToZip.isHidden()) {
-            return;
-        }
-        if (fileToZip.isDirectory()) {
-            if (fileName.endsWith("/")) {
-                zipOut.putNextEntry(new ZipEntry(fileName));
-                zipOut.closeEntry();
-            } else {
-                zipOut.putNextEntry(new ZipEntry(fileName + "/"));
-                zipOut.closeEntry();
-            }
-            File[] children = fileToZip.listFiles();
-            for (File childFile : children) {
-                zipFile(childFile, fileName + "/" + childFile.getName(), zipOut);
-            }
-            return;
-        }
-        FileInputStream fis = new FileInputStream(fileToZip);
-        ZipEntry zipEntry = new ZipEntry(fileName);
-        zipOut.putNextEntry(zipEntry);
-        byte[] bytes = new byte[1024];
-        int length;
-        while ((length = fis.read(bytes)) >= 0) {
-            zipOut.write(bytes, 0, length);
-        }
-        fis.close();
-    }
-
 }
