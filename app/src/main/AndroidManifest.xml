@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wertpapierkurse">
         <activity
+            android:name=".BrowseFolder"
+            android:exported="false" />
+        <activity
+            android:name=".ListFiles"
+            android:exported="false" />
+        <activity
             android:name=".ShowPriceChart"
             android:exported="false" />
         <activity

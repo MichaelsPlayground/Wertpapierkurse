@@ -11,92 +11,46 @@
 
     <TextView
         android:id="@+id/tvSpcTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Wertpapierkurschart anzeigen"
+        android:text="Wertpapier Kurs-Chart anzeigen"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvSpcSelectMonth"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btnSpcSelectFile"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Monat &amp; Jahr waehlen"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:text="Kursdatei auswaehlen" />
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/etSpcSelectedFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        android:cursorVisible="false"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="none"
+        android:minHeight="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="16dp"
+        android:hint="selected file comes here"
+        android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/btnSpcMonthYearPicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="M/Y Picker" />
-
-        <EditText
-            android:id="@+id/etSpcSelectedDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:cursorVisible="false"
-            android:ems="10"
-            android:focusable="false"
-            android:inputType="none"
-            android:minHeight="48dp"
-            android:text="selected month comes here"
-            android:textAlignment="center" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/spcLinechart"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <Button
-            android:id="@+id/btnSpcGetPrices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:text="Kurse laden" />
-
-        <Button
-            android:id="@+id/btnSpcChooser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:text="choose" />
-
-        <Button
-            android:id="@+id/btnSpcCsvLoad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="CSV Load" />
-    </LinearLayout>
-
-
-    <ListView
-        android:id="@+id/lv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="fill_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
 
 </LinearLayout>
