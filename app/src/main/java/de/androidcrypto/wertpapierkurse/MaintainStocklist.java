@@ -1,15 +1,14 @@
 package de.androidcrypto.wertpapierkurse;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -20,7 +19,7 @@ public class MaintainStocklist extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerViewAdapter mAdapter;
     ArrayList<String> stringArrayList = new ArrayList<>();
-    CoordinatorLayout coordinatorLayout;
+    //CoordinatorLayout coordinatorLayout;
     LinearLayout linearLayout;
 
     @Override
