@@ -1,6 +1,5 @@
 package de.androidcrypto.wertpapierkurse;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,15 +16,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class MaintainStocklist extends AppCompatActivity {
+public class MaintainStocklist_2022_02_23 extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerViewAdapter mAdapter;
     ArrayList<String> stringArrayList = new ArrayList<>();
     ConstraintLayout constraintLayout;
     ArrayList<StockModel> stockModelArrayList = new ArrayList<>();
-
-
 
     Intent addStockIntent;
 
@@ -37,11 +34,10 @@ public class MaintainStocklist extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         constraintLayout = findViewById(R.id.coordinatorLayout);
 
-        addStockIntent = new Intent(MaintainStocklist.this, AddStock.class);
+        addStockIntent = new Intent(MaintainStocklist_2022_02_23.this, AddStock.class);
 
-        populateRecyclerView(getBaseContext());
+        populateRecyclerView();
         enableSwipeToDeleteAndUndo();
-
 
         FloatingActionButton fab = findViewById(R.id.fabAddStock);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,37 +51,9 @@ public class MaintainStocklist extends AppCompatActivity {
             }
         });
 
-        // todo edit existing entry
-
-        // todo show group
-
-        // todo show active flag (green mark)
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        populateRecyclerView(getBaseContext());
-    }
-
-    private void populateRecyclerView(Context context) {
-        // empty the existing stocksList
-        FileAccess.csvStockList.clear();
-        stockModelArrayList.clear();
-        FileAccess.csvStockList.add(FileAccess.csvStockHeader);
-        // check if stocks list file exists, if not create one with header
-        FileAccess.stocksListExists(context);
-        // now load the existing file
-        int records = 0;
-        records = FileAccess.loadStocksListV3(context, stockModelArrayList);
-        System.out.println("existing records: " + records);
-
-        mAdapter = new RecyclerViewAdapter(stockModelArrayList);
-        recyclerView.setAdapter(mAdapter);
-    }
-
-    private void populateRecyclerViewOld() {
+    private void populateRecyclerView() {
         StockModel stockModel = new StockModel("IE123", "ETF Europe", true, "");
         stockModelArrayList.add(stockModel);
         stockModel = new StockModel("IE345", "ETF World", true, "");

@@ -1,5 +1,6 @@
 package de.androidcrypto.wertpapierkurse;
 
+import android.os.StrictMode;
 import android.text.Editable;
 import android.widget.EditText;
 
@@ -20,6 +21,11 @@ public class ApiAccess {
     static String API_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0";
 
     public static String getStockName(String isin) {
+        // be careful with these 2 lines
+        // https://stackoverflow.com/a/9289190/8166854
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         System.out.println("*** get name ***");
         String stockName = "";
         URL urlName = null;

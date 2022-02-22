@@ -5,13 +5,13 @@ public class StockModel {
     String isin;
     String isinName;
     boolean active;
-    String na;
+    String group;
 
-    public StockModel(String isin, String isinName, boolean active, String na) {
+    public StockModel(String isin, String isinName, boolean active, String group) {
         this.isin = isin;
         this.isinName = isinName;
         this.active = active;
-        this.na = na;
+        this.group = group;
     }
 
     public String getIsin() {
@@ -26,7 +26,7 @@ public class StockModel {
         return active;
     }
 
-    public String getNa() {
-        return na;
+    public String getGroup() {
+        return group;
     }
 }

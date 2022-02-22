@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import java.io.File;
+import java.io.IOException;
+
 public class AddStock extends AppCompatActivity {
 
     Button isinDelete, groupDelete;
@@ -65,7 +68,50 @@ public class AddStock extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // after storing
+                // todo check das die felder isin und wertpapiername tatsächlich gefüllt sind
+                Editable isin = stockIsin.getText();
+                Editable isinStockName = stockName.getText();
+                boolean activeChecked = stockActive.isChecked();
+                Editable group = stockGroup.getText();
+                //csvStockList.add(csvStockHeader);
+                String[] csvRecord = {String.valueOf(isin), String.valueOf(isinStockName), String.valueOf(activeChecked), String.valueOf(group)};
+
+
+                // empty the existing stocksList
+                FileAccess.csvStockList.clear();
+                FileAccess.csvStockList.add(FileAccess.csvStockHeader);
+                // check if stocks list file exists, if not create one with header
+                FileAccess.stocksListExists(v.getContext());
+                // now load the existing file
+                int records = 0;
+                records = FileAccess.loadStocksListV2(v.getContext());
+                System.out.println("add to existing records: " + records);
+                // add the new record
+                System.out.println("csvStockList records before adding: " + FileAccess.csvStockList.size());
+                FileAccess.csvStockList.add(csvRecord);
+                System.out.println("csvStockList records after adding: " + FileAccess.csvStockList.size());
+                // delete the old csv file
+                FileAccess.stocksListDeleteFile(v.getContext());
+                boolean wirteSuccess = FileAccess.writeStocksList(v.getContext(), FileAccess.csvStockList);
+      /*
+                // store the new file with complete list in memory
+                String path = getFilesDir().getAbsolutePath();
+                String csvFilenameComplete = path + "/" + FileAccess.stockListFileName;
+                System.out.println("csv file storing: " + csvFilenameComplete);
+                CsvWriterSimple writer = new CsvWriterSimple();
+                try {
+                    writer.writeToCsvFile(FileAccess.csvStockList, new File(csvFilenameComplete));
+                    System.out.println("csv file written");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+       */
+                System.out.println("write the new csvStockList: " + wirteSuccess);
+
+
+
+                // after storage
                 stockIsin.setText("");
                 stockName.setText("");
                 stockActive.setChecked(true);
