@@ -33,7 +33,7 @@
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/etIsin"
+        android:id="@+id/etStockIsin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

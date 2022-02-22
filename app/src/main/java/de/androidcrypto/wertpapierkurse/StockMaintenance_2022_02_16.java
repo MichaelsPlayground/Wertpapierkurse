@@ -40,7 +40,7 @@ public class StockMaintenance_2022_02_16 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_maintenance);
 
-        stockIsin = findViewById(R.id.etIsin);
+        stockIsin = findViewById(R.id.etStockIsin);
         stockName = findViewById(R.id.etStockName);
         stocksList = findViewById(R.id.etStocksList);
         isinLoeschen = findViewById(R.id.btnIsinDelete);

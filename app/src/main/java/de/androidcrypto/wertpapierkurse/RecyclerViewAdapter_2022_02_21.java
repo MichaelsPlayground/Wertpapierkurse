@@ -10,32 +10,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+public class RecyclerViewAdapter_2022_02_21 extends RecyclerView.Adapter<RecyclerViewAdapter_2022_02_21.MyViewHolder> {
 
-    //private ArrayList<String> data;
-    private ArrayList<StockModel> data;
+    private ArrayList<String> data;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTitle;
-        private TextView mIsinName;
         RelativeLayout relativeLayout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.txtTitle);
-            mIsinName = itemView.findViewById(R.id.txtIsinName);
         }
     }
-/*
-    public RecyclerViewAdapter(ArrayList<String> data) {
-        this.data = data;
-    }
-    */
-    public RecyclerViewAdapter(ArrayList<StockModel> data) {
-        this.data = data;
-    }
 
+    public RecyclerViewAdapter_2022_02_21(ArrayList<String> data) {
+        this.data = data;
+    }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,9 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        //holder.mTitle.setText(data.get(position));
-        holder.mTitle.setText(data.get(position).getIsin());
-        holder.mIsinName.setText(data.get(position).getIsinName());
+        holder.mTitle.setText(data.get(position));
     }
 
 
@@ -62,23 +52,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(StockModel item, int position) {
-        data.add(position, item);
-        notifyItemInserted(position);
-    }
-    /*
     public void restoreItem(String item, int position) {
         data.add(position, item);
         notifyItemInserted(position);
     }
-     */
 
-    public ArrayList<StockModel> getData() {
-        return data;
-    }
-    /*
     public ArrayList<String> getData() {
         return data;
     }
-     */
 }

@@ -2,21 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
-
+    tools:context=".AddStock">
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Wertpapierkursliste verwalten"
+        android:text="Wertpapier zur Liste hinzufügen"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -38,29 +36,30 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-    <EditText
-        android:id="@+id/etStockIsin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="ISIN"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:text="IE00BJ0KDQ92" />
+        <EditText
+            android:id="@+id/etStockIsin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="ISIN"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:text="IE00BJ0KDQ92" />
+
 
         <Button
             android:id="@+id/btnIsinDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:text="loeschen" />
 
-        </LinearLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnSearchIsin"
@@ -98,23 +97,27 @@
         android:minHeight="48dp"
         android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/btnAddStock"
-        android:layout_width="wrap_content"
+    <CheckBox
+        android:id="@+id/cbxStockActive"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="WP hinzufuegen" />
+        android:checked="true"
+        android:text="in den Datenabruf einbeziehen"
+        android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btnListStocks"
+    <TextView
+        android:id="@+id/tvGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="WP Liste anzeigen" />
+        android:text="Geben Sie die Gruppe ein (optional)"
+        android:textAlignment="center"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -123,46 +126,39 @@
         android:padding="8dp">
 
         <EditText
-            android:id="@+id/etStockNumber"
+            android:id="@+id/etStockGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
-            android:hint="Enter Stock number"
-            android:inputType="number"
+            android:hint="Gruppe (optional)"
+            android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:numeric="integer"
             android:text="" />
 
-    <Button
-        android:id="@+id/btnDeleteStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="WP loeschen" />
+
+        <Button
+            android:id="@+id/btnGroupDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="loeschen" />
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/etStocksList"
+    <Button
+        android:id="@+id/btnAddStock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:gravity="start|top"
-        android:hint="the stocks list comes here"
-        android:inputType="textMultiLine"
-        android:lines="5"
-        android:textAlignment="textStart"
-        android:textSize="12sp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Wertpapier hinzufügen" />
+
 
 
 </LinearLayout>

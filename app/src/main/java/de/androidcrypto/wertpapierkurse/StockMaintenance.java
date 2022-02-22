@@ -2,7 +2,6 @@ package de.androidcrypto.wertpapierkurse;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -41,7 +40,7 @@ public class StockMaintenance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_maintenance);
 
-        stockIsin = findViewById(R.id.etIsin);
+        stockIsin = findViewById(R.id.etStockIsin);
         stockName = findViewById(R.id.etStockName);
         stocksList = findViewById(R.id.etStocksList);
         isinLoeschen = findViewById(R.id.btnIsinDelete);

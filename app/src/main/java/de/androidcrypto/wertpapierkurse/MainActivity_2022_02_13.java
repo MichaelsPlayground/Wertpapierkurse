@@ -75,7 +75,7 @@ public class MainActivity_2022_02_13 extends AppCompatActivity {
 
         lineChart = findViewById(R.id.activity_main_linechart);
 
-        stockIsin = findViewById(R.id.etIsin);
+        stockIsin = findViewById(R.id.etStockIsin);
         stockName = findViewById(R.id.etStockName);
         getStockName = findViewById(R.id.btnSearchIsin);
         monthYearPicker = findViewById(R.id.btnMonthYearPicker);

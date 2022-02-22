@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_delete.xml" value="0.1685" />
+        <entry key="app/src/main/res/layout/activity_add_stock.xml" value="0.10099637681159421" />
         <entry key="app/src/main/res/layout/activity_browse_folder.xml" value="0.1344984802431611" />
         <entry key="app/src/main/res/layout/activity_download_historic_prices.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.125" />
@@ -11,8 +12,9 @@
         <entry key="app/src/main/res/layout/activity_maintain_stocklist.xml" value="0.15526849037487336" />
         <entry key="app/src/main/res/layout/activity_maintain_stocklist_2022_02_22.xml" value="0.10099637681159421" />
         <entry key="app/src/main/res/layout/activity_show_price_chart.xml" value="0.12364130434782608" />
-        <entry key="app/src/main/res/layout/activity_stock_maintenance.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_stock_maintenance.xml" value="0.165" />
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.15526849037487336" />
+        <entry key="app/src/main/res/layout/cardview_row_2022_02_21.xml" value="0.15526849037487336" />
         <entry key="app/src/main/res/layout/sample_constraint.xml" value="0.15526849037487336" />
       </map>
     </option>
