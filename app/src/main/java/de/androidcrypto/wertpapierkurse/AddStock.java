@@ -2,6 +2,7 @@ package de.androidcrypto.wertpapierkurse;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -32,6 +33,9 @@ public class AddStock extends AppCompatActivity {
 
         stockActive = findViewById(R.id.cbxStockActive);
 
+//        addStock.setBackgroundColor(Color.GRAY);
+        addStock.setEnabled(false);
+
         isinDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,6 +49,8 @@ public class AddStock extends AppCompatActivity {
                 System.out.println("*** get name ***");
                 Editable isin = stockIsin.getText();
                 stockName.setText(ApiAccess.getStockName(isin.toString()));
+                //addStock.setBackgroundColor(getColor(R.color.blue));
+                addStock.setEnabled(true);
             }
         });
 
@@ -63,6 +69,7 @@ public class AddStock extends AppCompatActivity {
                 stockIsin.setText("");
                 stockName.setText("");
                 stockActive.setChecked(true);
+                addStock.setEnabled(false);
             }
         });
     }
