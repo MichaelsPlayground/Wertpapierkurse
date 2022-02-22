@@ -7,9 +7,12 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -20,7 +23,8 @@ public class MaintainStocklist extends AppCompatActivity {
     RecyclerViewAdapter mAdapter;
     ArrayList<String> stringArrayList = new ArrayList<>();
     //CoordinatorLayout coordinatorLayout;
-    LinearLayout linearLayout;
+    ConstraintLayout constraintLayout;
+    //LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +32,21 @@ public class MaintainStocklist extends AppCompatActivity {
         setContentView(R.layout.activity_maintain_stocklist);
 
         recyclerView = findViewById(R.id.recyclerView);
-        //coordinatorLayout = findViewById(R.id.coordinatorLayout);
-        linearLayout = findViewById(R.id.linearLayout);
+        constraintLayout = findViewById(R.id.coordinatorLayout);
+        //linearLayout = findViewById(R.id.linearLayout);
 
         populateRecyclerView();
         enableSwipeToDeleteAndUndo();
 
+
+        FloatingActionButton fab = findViewById(R.id.fabAddStock);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
     }
 
@@ -64,13 +77,15 @@ public class MaintainStocklist extends AppCompatActivity {
                 final String item = mAdapter.getData().get(position);
 
                 mAdapter.removeItem(position);
-
+/*
                 Snackbar snackbar = Snackbar
                         .make(linearLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                /*
+
+ */
+
                 Snackbar snackbar = Snackbar
-                        .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                 */
+                        .make(constraintLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
