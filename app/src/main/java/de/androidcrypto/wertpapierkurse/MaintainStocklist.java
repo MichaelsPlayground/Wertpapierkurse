@@ -61,6 +61,7 @@ public class MaintainStocklist extends AppCompatActivity {
 
         // todo show active flag (green mark)
 
+        // todo delete entry when swiped away
     }
 
     @Override
