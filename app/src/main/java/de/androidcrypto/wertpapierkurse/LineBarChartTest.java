@@ -60,6 +60,8 @@ public class LineBarChartTest extends AppCompatActivity {
                 setLineChartData(pricesClose);
 
                 // todo add a bar chart with wins and losses
+                // https://stackoverflow.com/questions/41566780/android-combined-bar-and-line-graph-mpandroidchart
+
             }
         });
 
