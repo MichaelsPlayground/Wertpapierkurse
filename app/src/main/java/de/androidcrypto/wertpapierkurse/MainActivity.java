@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     EditText stockIsin, stockName, date;
     DatePickerDialog datePickerDialog;
     Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
-    Button showPriceChart, maintainStocklist;
+    Button showPriceChart, maintainStocklist, lineBarChartTest;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     // commodities DE000A0H0728
 
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
-    Intent maintainStocklistIntent;
+    Intent maintainStocklistIntent, lineBarChartTestIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +100,13 @@ public class MainActivity extends AppCompatActivity {
         downloadHistoricPrices = findViewById(R.id.btnDownloadHistoricPrices);
         showPriceChart = findViewById(R.id.btnShowPriceChart);
         maintainStocklist = findViewById(R.id.btnMaintainStockList);
+        lineBarChartTest = findViewById(R.id.btnMLineBarChartTest);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
         showPriceChartIntent = new Intent(MainActivity.this, ShowPriceChart.class);
         maintainStocklistIntent = new Intent(MainActivity.this, MaintainStocklist.class);
+        lineBarChartTestIntent = new Intent(MainActivity.this, LineBarChartTest.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -312,6 +314,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(maintainStocklistIntent);
             }
         });
+
+        lineBarChartTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(lineBarChartTestIntent);
+            }
+        });
+
     }
 
     private MonthYearPickerDialogFragment createDialog(boolean customTitle) {

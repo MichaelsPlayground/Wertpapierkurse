@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wertpapierkurse">
         <activity
+            android:name=".LineBarChartTest"
+            android:exported="false" />
+        <activity
             android:name=".AddStock"
             android:exported="false" />
         <activity
