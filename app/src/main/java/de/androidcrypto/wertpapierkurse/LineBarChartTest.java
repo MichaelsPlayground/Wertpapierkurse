@@ -7,13 +7,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +31,9 @@ public class LineBarChartTest extends AppCompatActivity {
 
     Button test;
     private LineChart lineChart;
+    private BarChart barChart;
     ArrayList<Entry> pricesClose = new ArrayList<>();
+    ArrayList<BarEntry> difference = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,12 @@ public class LineBarChartTest extends AppCompatActivity {
                 pricesClose.add(new Entry(Float.parseFloat("1641769200"), Float.parseFloat("42.435")));
                 pricesClose.add(new Entry(Float.parseFloat("1641855600"), Float.parseFloat("42.725")));
 
+                difference.add(new BarEntry(Float.parseFloat("1641337200"), Float.parseFloat("100")));
+                difference.add(new BarEntry(Float.parseFloat("1641423600"), Float.parseFloat("110")));
+                difference.add(new BarEntry(Float.parseFloat("1641510000"), Float.parseFloat("10")));
+                difference.add(new BarEntry(Float.parseFloat("1641769200"), Float.parseFloat("-25")));
+                difference.add(new BarEntry(Float.parseFloat("1641855600"), Float.parseFloat("40")));
+
                 Comparator<Entry> comparator = new Comparator<Entry>() {
                     @Override
                     public int compare(Entry o1, Entry o2) {
@@ -56,8 +69,10 @@ public class LineBarChartTest extends AppCompatActivity {
                 };
 
                 pricesClose.sort(comparator);
+                difference.sort(comparator);
                 //setLineChartData(pricesHigh, pricesLow, pricesClose);
                 setLineChartData(pricesClose);
+                //setBarChartData(difference);
 
                 // todo add a bar chart with wins and losses
                 // https://stackoverflow.com/questions/41566780/android-combined-bar-and-line-graph-mpandroidchart
@@ -104,6 +119,27 @@ public class LineBarChartTest extends AppCompatActivity {
         LineData lineData = new LineData(dataSets);
         lineChart.setData(lineData);
         lineChart.invalidate();
+    }
+
+    private void setBarChartData(ArrayList<BarEntry> difference) {
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+
+        //if (closeCheckBox.isChecked()) {
+        //LineDataSet closeLineDataSet = new LineDataSet(pricesClose, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Close)");
+        BarDataSet closeLineDataSet = new BarDataSet(difference, "Ergebnis");
+        //closeLineDataSet.setDrawCircles(true);
+        //closeLineDataSet.setDrawCircles(false);
+        //closeLineDataSet.setCircleRadius(4);
+        //closeLineDataSet.setDrawValues(false);
+        //closeLineDataSet.setLineWidth(3);
+        closeLineDataSet.setColor(Color.rgb(255, 165, 0));
+        //closeLineDataSet.setCircleColor(Color.rgb(255, 165, 0));
+        dataSets.add(closeLineDataSet);
+        //}
+
+        BarData lineData = new BarData(dataSets);
+        barChart.setData(lineData);
+        barChart.invalidate();
     }
 
 
