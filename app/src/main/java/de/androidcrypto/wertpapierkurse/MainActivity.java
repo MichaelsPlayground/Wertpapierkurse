@@ -324,6 +324,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        manageBookings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(manageBookingsIntent);
+            }
+        });
+
     }
 
     private MonthYearPickerDialogFragment createDialog(boolean customTitle) {

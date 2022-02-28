@@ -21,11 +21,8 @@ public class MaintainStocklist extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerViewAdapter mAdapter;
-    ArrayList<String> stringArrayList = new ArrayList<>();
     ConstraintLayout constraintLayout;
     ArrayList<StockModel> stockModelArrayList = new ArrayList<>();
-
-
 
     Intent addStockIntent;
 
