@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     EditText stockIsin, stockName, date;
     DatePickerDialog datePickerDialog;
     Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
-    Button showPriceChart, maintainStocklist, lineBarChartTest;
+    Button showPriceChart, maintainStocklist, lineBarChartTest, manageBookings;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     // commodities DE000A0H0728
 
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
-    Intent maintainStocklistIntent, lineBarChartTestIntent;
+    Intent maintainStocklistIntent, lineBarChartTestIntent, manageBookingsIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +101,14 @@ public class MainActivity extends AppCompatActivity {
         showPriceChart = findViewById(R.id.btnShowPriceChart);
         maintainStocklist = findViewById(R.id.btnMaintainStockList);
         lineBarChartTest = findViewById(R.id.btnMLineBarChartTest);
+        manageBookings = findViewById(R.id.btnManageBookings);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
         showPriceChartIntent = new Intent(MainActivity.this, ShowPriceChart.class);
         maintainStocklistIntent = new Intent(MainActivity.this, MaintainStocklist.class);
         lineBarChartTestIntent = new Intent(MainActivity.this, LineBarChartTest.class);
+        manageBookingsIntent = new Intent(MainActivity.this, ManageBookings.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
