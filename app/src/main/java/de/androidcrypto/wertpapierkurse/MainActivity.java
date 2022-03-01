@@ -37,13 +37,18 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     // lemon.markets docs: https://data.lemon.markets/v1/docs
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
     Button showPriceChart, maintainStocklist, lineBarChartTest, manageBookings;
+    Button workingDayList;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -102,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         maintainStocklist = findViewById(R.id.btnMaintainStockList);
         lineBarChartTest = findViewById(R.id.btnMLineBarChartTest);
         manageBookings = findViewById(R.id.btnManageBookings);
+        workingDayList = findViewById(R.id.btnWorkingDayList);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
@@ -331,7 +338,79 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        workingDayList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("*** WORKING DAY LIST 2022 ***");
+                System.out.println("includes 01.01. and 31.12.");
+
+/*
+                String s = "2022-01-01";
+                String e = "2022-12-31";
+                LocalDate start = LocalDate.parse(s);
+                LocalDate end = LocalDate.parse(e);
+                List<LocalDate> totalDates = new ArrayList<>();
+                List<LocalDate> totalDatesWorkdays = new ArrayList<>();
+                while (!start.isAfter(end)) {
+                    totalDates.add(start);
+                    //totalDatesWorkdays.add(start);
+                    //System.out.println("date: " + start);
+                    start = start.plusDays(1);
+                }
+                System.out.println("** complete list **");
+                System.out.println(Arrays.deepToString(totalDates.toArray()));
+
+                //for (int counter = 0; counter < totalDates.size(); counter++) { // checks for all days
+                totalDatesWorkdays.add(totalDates.get(0)); // 01.01.
+                for (int counter = 1; counter < (totalDates.size() - 1); counter++) { // checks NOT for 01.01. and 31.12.
+                    //System.out.println(totalDatesWorkdays.get(counter));
+                    LocalDate date = totalDates.get(counter);
+                    if (date.getDayOfWeek().getValue() != 6 & date.getDayOfWeek().getValue() != 7) {
+                        totalDatesWorkdays.add(date);
+                    }
+                }
+                totalDatesWorkdays.add(totalDates.get(totalDates.size()-1)); // 31.12.
+*/
+                String year = "2022"; // needs to be a four digit string
+                ArrayList<String> daysInYearWithoutWeenends = getListOfDaysWithoutWeekends(year);
+
+                System.out.println("** only workdays " + daysInYearWithoutWeenends.size());
+                System.out.println(Arrays.deepToString(daysInYearWithoutWeenends.toArray()));
+            }
+        });
+
     }
+
+    // this function returns an arraylist of String with all days in a given year in format yyyy-mm-dd
+    // excluded are the weekends = saturday and sunday BUT included are
+    // 01.01. and 31.12. regardless if they are weekend days
+    // this is to force that each table of days starts with 01.01.xxxx and ends with 31.12.xxxx
+    private ArrayList<String> getListOfDaysWithoutWeekends(String year) {
+        String s =  year + "-01-01"; // e.g. 2022-01-01
+        String e = year + "-12-31"; // e.g. 2022-12-31
+        LocalDate start = LocalDate.parse(s);
+        LocalDate end = LocalDate.parse(e);
+        List<LocalDate> totalDates = new ArrayList<>();
+        ArrayList<String> totalDatesWorkdays = new ArrayList<>();
+        while (!start.isAfter(end)) {
+            totalDates.add(start);
+            start = start.plusDays(1);
+        }
+        //System.out.println("** complete list **");
+        //System.out.println(Arrays.deepToString(totalDates.toArray()));
+        // now remove the weekends weekends
+        //for (int counter = 0; counter < totalDates.size(); counter++) { // checks for all days
+        totalDatesWorkdays.add(totalDates.get(0).toString()); // 01.01.
+        for (int counter = 1; counter < (totalDates.size() - 1); counter++) { // checks NOT for 01.01. and 31.12.
+            LocalDate date = totalDates.get(counter);
+            if (date.getDayOfWeek().getValue() != 6 & date.getDayOfWeek().getValue() != 7) {
+                totalDatesWorkdays.add(date.toString());
+            }
+        }
+        totalDatesWorkdays.add(totalDates.get(totalDates.size()-1).toString()); // 31.12.
+        return totalDatesWorkdays;
+    }
+
 
     private MonthYearPickerDialogFragment createDialog(boolean customTitle) {
         return MonthYearPickerDialogFragment

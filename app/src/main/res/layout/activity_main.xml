@@ -225,13 +225,13 @@
             android:text="Manage bookings" />
 
         <Button
-            android:id="@+id/btnXXX"
+            android:id="@+id/btnWorkingDayList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
-            android:text="XXX" />
+            android:text="working day list" />
 
     </LinearLayout>
 
