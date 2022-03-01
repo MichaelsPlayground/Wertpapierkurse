@@ -94,13 +94,13 @@ public class ManageBookings extends AppCompatActivity {
     }
 
     private void populateRecyclerViewOld() {
-        BookingModel bookingModel = new BookingModel("IE123", "ETF Europe", "2022-01-05", "2022", "234", "buy", "9988,22", "finanzen", "", "", true);
+        BookingModel bookingModel = new BookingModel("2022-01-05", "", "2022", "IE123", "ETF Europe", "+", "10", "150,50", "10", "150,50", "finanzen", "", "", true);
         bookingModelArrayList.add(bookingModel);
-        bookingModel = new BookingModel("IE234", "ETF World", "2022-01-08", "2022", "3", "buy", "413,88", "finanzen", "", "", true);
+        bookingModel = new BookingModel("2022-01-06", "", "2022", "IE123", "ETF Europe", "+", "10", "150,50", "10", "150,50", "finanzen", "", "", true);
         bookingModelArrayList.add(bookingModel);
-        bookingModel = new BookingModel("IE345", "ETF Dax", "2022-01-09", "2022", "5", "buy", "734,65", "finanzen", "", "", true);
+        bookingModel = new BookingModel("2022-01-07", "", "2022", "IE123", "ETF Europe", "+", "10", "150,50", "10", "150,50", "finanzen", "", "", true);
         bookingModelArrayList.add(bookingModel);
-        bookingModel = new BookingModel("IE123", "ETF Europe", "2022-01-15", "2022", "238", "buy", "9712,02", "finanzen", "", "", true);
+        bookingModel = new BookingModel("2022-01-08", "", "2022", "IE123", "ETF Europe", "+", "10", "150,50", "10", "150,50", "finanzen", "", "", true);
         bookingModelArrayList.add(bookingModel);
 
         mAdapter = new RecyclerViewAdapterBooking(bookingModelArrayList);

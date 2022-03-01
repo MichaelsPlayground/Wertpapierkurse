@@ -2,31 +2,62 @@ package de.androidcrypto.wertpapierkurse;
 
 public class BookingModel {
 
+    String date; // yyyy-mm-tt, "2022-01-07"
+    String unixDate; // unix timestamp
     String isin;
     String isinName;
-    String date; // yyyy-mm-tt, "2022-01-07"
     String bookingYear; // "2022"
+    String kind; // "+" or "-"
     String numberOfShares; // "234,5678"
-    String kind; // "buy" or "sell"
     String amountEuro; // complete costs "9584,30"
+    String totalNumberOfShares;
+    String totalAmountEuro;
     String depot; // "consorsbank"
     String note; // optional, e.g. "Sparplan"
     String group;
     boolean active;
 
-    public BookingModel(String isin, String isinName, String date, String bookingYear, String numberOfShares, String kind, String amountEuro, String depot, String note, String group, boolean active) {
+    public BookingModel(String date, String unixDate, String bookingYear, String isin, String isinName, String kind, String numberOfShares, String amountEuro, String totalNumberOfShares, String totalAmountEuro, String depot, String note, String group, boolean active) {
+        this.date = date;
+        this.unixDate = unixDate;
+        this.bookingYear = bookingYear;
         this.isin = isin;
         this.isinName = isinName;
-        this.date = date;
-        this.bookingYear = bookingYear;
-        this.numberOfShares = numberOfShares;
         this.kind = kind;
+        this.numberOfShares = numberOfShares;
         this.amountEuro = amountEuro;
+        this.totalNumberOfShares = totalNumberOfShares;
+        this.totalAmountEuro = totalAmountEuro;
         this.depot = depot;
         this.note = note;
         this.group = group;
         this.active = active;
     }
+
+    public String getTotalNumberOfShares() {
+        return totalNumberOfShares;
+    }
+
+    public void setTotalNumberOfShares(String totalNumberOfShares) {
+        this.totalNumberOfShares = totalNumberOfShares;
+    }
+
+    public String getTotalAmountEuro() {
+        return totalAmountEuro;
+    }
+
+    public void setTotalAmountEuro(String totalAmountEuro) {
+        this.totalAmountEuro = totalAmountEuro;
+    }
+
+    public String getUnixDate() {
+        return unixDate;
+    }
+
+    public void setUnixDate(String unixDate) {
+        this.unixDate = unixDate;
+    }
+
 
     public String getIsin() {
         return isin;

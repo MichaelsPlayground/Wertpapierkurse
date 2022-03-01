@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wertpapierkurse">
         <activity
+            android:name=".SetupDatabaseIsinYear"
+            android:exported="false" />
+        <activity
             android:name=".ManageBookings"
             android:exported="false" />
         <activity

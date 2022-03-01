@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
     Button showPriceChart, maintainStocklist, lineBarChartTest, manageBookings;
-    Button workingDayList;
+    Button workingDayList, setupDatabaseIsinYear;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
     Intent maintainStocklistIntent, lineBarChartTestIntent, manageBookingsIntent;
+    Intent setupDatabaseIsinYearIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         lineBarChartTest = findViewById(R.id.btnMLineBarChartTest);
         manageBookings = findViewById(R.id.btnManageBookings);
         workingDayList = findViewById(R.id.btnWorkingDayList);
+        setupDatabaseIsinYear = findViewById(R.id.btnSetupDatabaseIsinYear);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         maintainStocklistIntent = new Intent(MainActivity.this, MaintainStocklist.class);
         lineBarChartTestIntent = new Intent(MainActivity.this, LineBarChartTest.class);
         manageBookingsIntent = new Intent(MainActivity.this, ManageBookings.class);
+        setupDatabaseIsinYearIntent = new Intent(MainActivity.this, SetupDatabaseIsinYear.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -376,6 +379,13 @@ public class MainActivity extends AppCompatActivity {
 
                 System.out.println("** only workdays " + daysInYearWithoutWeenends.size());
                 System.out.println(Arrays.deepToString(daysInYearWithoutWeenends.toArray()));
+            }
+        });
+
+        setupDatabaseIsinYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(setupDatabaseIsinYearIntent);
             }
         });
 

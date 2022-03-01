@@ -64,6 +64,7 @@ public class MaintainStocklist extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        stockModelArrayList.clear();
         populateRecyclerView(getBaseContext());
     }
 
@@ -71,6 +72,7 @@ public class MaintainStocklist extends AppCompatActivity {
         // empty the existing stocksList
         FileAccess.csvStockList.clear();
         stockModelArrayList.clear();
+        FileAccess.csvStockList.clear();
         FileAccess.csvStockList.add(FileAccess.csvStockHeader);
         // check if stocks list file exists, if not create one with header
         FileAccess.stocksListExists(context);
