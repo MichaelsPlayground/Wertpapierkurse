@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
     Button showPriceChart, maintainStocklist, lineBarChartTest, manageBookings;
-    Button workingDayList, setupDatabaseIsinYear;
+    Button workingDayList, setupDatabaseIsinYear, setupModalIsinYear;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
     Intent maintainStocklistIntent, lineBarChartTestIntent, manageBookingsIntent;
-    Intent setupDatabaseIsinYearIntent;
+    Intent setupDatabaseIsinYearIntent, setupModalIsinYearIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         manageBookings = findViewById(R.id.btnManageBookings);
         workingDayList = findViewById(R.id.btnWorkingDayList);
         setupDatabaseIsinYear = findViewById(R.id.btnSetupDatabaseIsinYear);
+        setupModalIsinYear = findViewById(R.id.btnSetupModalIsinYear);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         lineBarChartTestIntent = new Intent(MainActivity.this, LineBarChartTest.class);
         manageBookingsIntent = new Intent(MainActivity.this, ManageBookings.class);
         setupDatabaseIsinYearIntent = new Intent(MainActivity.this, SetupDatabaseIsinYear.class);
+        setupModalIsinYearIntent = new Intent(MainActivity.this, SetupModalIsinYear.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -386,6 +388,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(setupDatabaseIsinYearIntent);
+            }
+        });
+
+        setupModalIsinYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(setupModalIsinYearIntent);
             }
         });
 

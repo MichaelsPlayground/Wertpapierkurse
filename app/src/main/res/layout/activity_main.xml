@@ -145,6 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
             android:text="CSV Load" />
     </LinearLayout>
 
@@ -178,7 +179,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="2dp"
             android:text="Chart" />
 
     </LinearLayout>
@@ -235,6 +235,12 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
     <Button
         android:id="@+id/btnSetupDatabaseIsinYear"
         android:layout_width="wrap_content"
@@ -244,12 +250,22 @@
         android:layout_marginEnd="2dp"
         android:text="setup database ISIN year" />
 
+        <Button
+            android:id="@+id/btnSetupModalIsinYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="setup modal I/Y" />
+
+    </LinearLayout>
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/activity_main_linechart"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
-
 
 </LinearLayout>
