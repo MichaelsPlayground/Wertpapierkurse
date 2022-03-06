@@ -22,6 +22,13 @@ public class BrowseFolder extends AppCompatActivity implements Serializable {
 
     Intent startListFileActivityIntent;
 
+    // steuerung des intent verhaltens
+    String baseSubfolder = "";
+    String returnToActivity = "";
+    String showListFilesActivity;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +40,30 @@ public class BrowseFolder extends AppCompatActivity implements Serializable {
         startListFileActivityIntent = new Intent(BrowseFolder.this, ListFiles.class);
 
         listFolder.setVisibility(View.GONE);
+
+        Bundle extras = getIntent().getExtras();
+        System.out.println("get bundles in BrowseFolder");
+        if (extras != null) {
+            System.out.println("extras not null");
+            baseSubfolder = (String) getIntent().getSerializableExtra("baseSubfolder"); //Obtaining data
+            showListFilesActivity = (String) getIntent().getSerializableExtra("listFilesActivity"); //Obtaining data
+            returnToActivity = (String) getIntent().getSerializableExtra("returnToActivity"); //Obtaining data
+            //if (!folder.equals("")) {
+            if (baseSubfolder != null) {
+                System.out.println("folder not null");
+                //folderFromListFolder = folder;
+                // todo this is a hardcoded folder, change
+                //folderFromListFolder = folder + "/prices";
+                System.out.println(" BrowseFolder baseSubfolder: " + baseSubfolder);
+                // todo do what has todo when folder is selected
+            }
+        }
+
+
         //File internalStorageDir = new File(getFilesDir(), "");
         // todo this hardcoded - change
-        File internalStorageDir = new File(getFilesDir(), "prices");
+        //File internalStorageDir = new File(getFilesDir(), "prices");
+        File internalStorageDir = new File(getFilesDir(), baseSubfolder);
 
         File[] files = internalStorageDir.listFiles();
         ArrayList<String> folderNames = new ArrayList<>();
@@ -55,6 +83,8 @@ public class BrowseFolder extends AppCompatActivity implements Serializable {
                 System.out.println("The selected folder is : " + selectedItem);
                 Bundle bundle = new Bundle();
                 bundle.putString("browsedFolder", selectedItem);
+                bundle.putString("baseSubfolder", baseSubfolder);
+                bundle.putString("returnToActivity", returnToActivity);
                 startListFileActivityIntent.putExtras(bundle);
                 startActivity(startListFileActivityIntent);
             }

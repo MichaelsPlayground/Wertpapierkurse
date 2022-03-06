@@ -35,6 +35,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
     Intent listFolderIntent, listFilesIntent, browseFolderIntent;
     String choosenFolder = ""; // filled by ListFiles Intent
     String choosenFile = ""; // filled by ListFiles Intent
+    final String baseSubfolder = "prices"; // todo change hardcoded
 
     ArrayList<StockMovementsModal> bookingModelArrayList;
     ArrayList<Entry> pricesClose = new ArrayList<>();
@@ -275,6 +276,13 @@ public class SetupModalIsinYear extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("*** append close prices from csv file ***");
+                //startActivity(browseFolderIntent);
+                Bundle bundle = new Bundle();
+                // todo hardcoded subfolder name
+                bundle.putString("baseSubfolder", baseSubfolder);
+                bundle.putString("showListFilesActivity", "true");
+                bundle.putString("returnToActivity", "SetupModalIsinYear");
+                browseFolderIntent.putExtras(bundle);
                 startActivity(browseFolderIntent);
             }
         });

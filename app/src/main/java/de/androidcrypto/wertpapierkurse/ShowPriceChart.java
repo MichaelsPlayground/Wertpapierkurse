@@ -62,6 +62,7 @@ public class ShowPriceChart extends AppCompatActivity {
 
     Intent listFolderIntent, listFilesIntent, browseFolderIntent;
 
+    final String baseSubfolder = "prices"; // todo change hardcoded
     String choosenFolder = ""; // filled by ListFiles Intent
     String choosenFile = ""; // filled by ListFiles Intent
 
@@ -104,7 +105,14 @@ public class ShowPriceChart extends AppCompatActivity {
         selectFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                // todo hardcoded subfolder name
+                bundle.putString("baseSubfolder", baseSubfolder);
+                bundle.putString("showListFilesActivity", "true");
+                bundle.putString("returnToActivity", "ShowPriceChart");
+                browseFolderIntent.putExtras(bundle);
                 startActivity(browseFolderIntent);
+                //startActivity(browseFolderIntent);
             }
         });
 
@@ -149,12 +157,13 @@ public class ShowPriceChart extends AppCompatActivity {
         lineChart.invalidate();
     }
 
+    // todo change this method to FileAccess
     private void loadCsvFile(String directory, String filename) {
         // load filename from directory in internal storage
         pricesClose.clear();
         try {
             // todo hardcoded folder
-            File baseFolderDir = new File(getFilesDir(), "prices");
+            File baseFolderDir = new File(getFilesDir(), baseSubfolder);
             File baseDir = new File(baseFolderDir, directory);
             File csvFile = new File(baseDir, filename);
             CsvParserSimple obj = new CsvParserSimple();
