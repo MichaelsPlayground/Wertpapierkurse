@@ -33,7 +33,10 @@ public class BrowseFolder extends AppCompatActivity implements Serializable {
         startListFileActivityIntent = new Intent(BrowseFolder.this, ListFiles.class);
 
         listFolder.setVisibility(View.GONE);
-        File internalStorageDir = new File(getFilesDir(), "");
+        //File internalStorageDir = new File(getFilesDir(), "");
+        // todo this hardcoded - change
+        File internalStorageDir = new File(getFilesDir(), "prices");
+
         File[] files = internalStorageDir.listFiles();
         ArrayList<String> folderNames = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {

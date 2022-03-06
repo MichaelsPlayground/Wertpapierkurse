@@ -2,11 +2,15 @@ package de.androidcrypto.wertpapierkurse;
 
 import android.content.Context;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class FileAccess {
 
@@ -16,8 +20,11 @@ public class FileAccess {
 
     static List<String[]> result = null; // filled by loadStocksList
 
+    final static String historicPricesBaseFolder = "prices";
+
     public static void stocksListExists(Context context) {
         String path = context.getFilesDir().getAbsolutePath();
+        // todo use pathSeparator instead of /
         String csvFilenameComplete = path + "/" + stockListFileName;
         System.out.println("file reading: " + csvFilenameComplete);
         // check if file exists before reading
@@ -37,6 +44,7 @@ public class FileAccess {
 
     public static void stocksListDeleteFile(Context context) {
         String path = context.getFilesDir().getAbsolutePath();
+        // todo use pathSeparator instead of /
         String csvFilenameComplete = path + "/" + stockListFileName;
         System.out.println("file reading: " + csvFilenameComplete);
         // check if file exists before reading
@@ -52,6 +60,7 @@ public class FileAccess {
     public static int loadStocksList(Context context) {
         int records = 0;
         String path = context.getFilesDir().getAbsolutePath();
+        // todo use pathSeparator instead of /
         String csvFilenameComplete = path + "/" + stockListFileName;
         System.out.println("file reading: " + csvFilenameComplete);
         // check if file exists before reading
@@ -102,6 +111,7 @@ public class FileAccess {
     public static int loadStocksListV3(Context context, ArrayList<StockModel> stockModelArrayList) {
         int records = 0;
         String path = context.getFilesDir().getAbsolutePath();
+        // todo use pathSeparator instead of /
         String csvFilenameComplete = path + "/" + stockListFileName;
         System.out.println("file reading: " + csvFilenameComplete);
         // check if file exists before reading
@@ -163,6 +173,7 @@ public class FileAccess {
     public static int loadStocksListV2(Context context) {
         int records = 0;
         String path = context.getFilesDir().getAbsolutePath();
+        // todo use pathSeparator instead of /
         String csvFilenameComplete = path + "/" + stockListFileName;
         System.out.println("file reading: " + csvFilenameComplete);
         // check if file exists before reading
@@ -224,6 +235,7 @@ public class FileAccess {
         boolean success = false;
         // store the new file with complete list in memory
         String path = context.getFilesDir().getAbsolutePath();
+        // todo use pathSeparator instead of /
         String csvFilenameComplete = path + "/" + FileAccess.stockListFileName;
         System.out.println("csv file storing: " + csvFilenameComplete);
         CsvWriterSimple writer = new CsvWriterSimple();
@@ -236,4 +248,76 @@ public class FileAccess {
         }
         return success;
     }
+
+    /* section write and load historic prices */
+
+    // returns the csv filename when success
+    public static String writeHistoricPrices(Context context, int year, int month, String isin, List<String[]> csvList) {
+        // format folder name yyyy-mm
+        String ymDirectory = year + "-" +
+                String.format(Locale.GERMANY, "%02d", month);
+        // first setup a base folder for historic prices
+        File baseFolderDir = new File(context.getFilesDir().getAbsolutePath(), historicPricesBaseFolder);
+        if (!baseFolderDir.exists()) {
+            baseFolderDir.mkdirs();
+        }
+        // second setup the subfolder vpr yyyy-mm
+        File baseDir = new File(baseFolderDir, ymDirectory);
+        if (!baseDir.exists()) {
+            baseDir.mkdirs();
+        }
+        String csvFilename = isin + "_" +
+                year + "-" +
+                String.format(Locale.GERMANY, "%02d", month) + ".csv";
+        // todo use pathSeparator instead of /
+        String csvFilenameComplete = baseDir + "/" + csvFilename;
+        System.out.println("csv file storing: " + csvFilenameComplete);
+        CsvWriterSimple writer = new CsvWriterSimple();
+        try {
+            writer.writeToCsvFile(csvList, new File(baseDir, csvFilename));
+            System.out.println("csv file written for ISIN " + isin);
+            return csvFilename;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    //
+    private ArrayList<PriceModel> loadHistoricPrices(Context context, String directory, String filename) {
+        // load filename from directory in internal storage
+        ArrayList<PriceModel> priceList = null;
+        priceList.clear();
+        try {
+            File baseFolderDir = new File(context.getFilesDir(), historicPricesBaseFolder);
+            File baseDir = new File(baseFolderDir, directory);
+            File csvFile = new File(baseDir, filename);
+            CsvParserSimple obj = new CsvParserSimple();
+            List<String[]> result = null;
+            result = obj.readFile(csvFile, 1);
+            int listIndex = 0;
+            String completeContent = "";
+            for (String[] arrays : result) {
+                System.out.println("\nString[" + listIndex++ + "] : " + Arrays.toString(arrays));
+                completeContent = completeContent + "[nr " + listIndex + "] : " + Arrays.toString(arrays) + "\n";
+                completeContent = completeContent + "-----------------\n";
+                int index = 0;
+                for (String array : arrays) {
+                    System.out.println(index++ + " : " + array);
+                }
+                String arDate = arrays[0];
+                String arDateUnix = arrays[1];
+                String arClose = arrays[2];
+                float priceCloseFloat = Float.parseFloat(arClose);
+                if (priceCloseFloat != 0) {
+                    PriceModel priceModel = new PriceModel(arDate, arDateUnix, arClose);
+                    priceList.add(priceModel);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return priceList;
+    }
+
 }

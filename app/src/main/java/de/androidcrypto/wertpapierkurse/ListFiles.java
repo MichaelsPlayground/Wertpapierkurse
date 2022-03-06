@@ -46,7 +46,9 @@ public class ListFiles extends AppCompatActivity implements Serializable {
             //if (!folder.equals("")) {
             if (folder != null) {
                 System.out.println("folder not null");
-                folderFromListFolder = folder;
+                //folderFromListFolder = folder;
+                // todo this is a hardcoded folder, change
+                //folderFromListFolder = folder + "/prices";
                 System.out.println("ListFile folder: " + folder);
                 // todo do what has todo when folder is selected
                 listFiles.setVisibility(View.GONE);
@@ -63,7 +65,11 @@ public class ListFiles extends AppCompatActivity implements Serializable {
     }
 
     private void listFiles(Context context, String startDirectory) {
-        File internalStorageDir = new File(getFilesDir(), startDirectory);
+        //File internalStorageDir = new File(getFilesDir(), startDirectory);
+        // todo this is harded folder
+        File internalStorageBaseDir = new File(getFilesDir(), "prices");
+        File internalStorageDir = new File(internalStorageBaseDir, startDirectory);
+
         File[] files = internalStorageDir.listFiles();
         ArrayList<String> fileNames = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {

@@ -1,28 +1,14 @@
 package de.androidcrypto.wertpapierkurse;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 
-import com.github.dewinjm.monthyearpicker.MonthFormat;
-import com.github.dewinjm.monthyearpicker.MonthYearPickerDialog;
-import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -34,20 +20,14 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-import java.util.regex.Pattern;
 
-public class ShowPriceChart extends AppCompatActivity {
+public class ShowPriceChart_2022_03_06 extends AppCompatActivity {
 
     // for selecting start and end date of download historical prices
     private int yearSelected;
@@ -79,7 +59,7 @@ public class ShowPriceChart extends AppCompatActivity {
         lineChart = findViewById(R.id.spcLinechart);
         configureLineChart();
 
-        browseFolderIntent = new Intent(ShowPriceChart.this, BrowseFolder.class);
+        browseFolderIntent = new Intent(ShowPriceChart_2022_03_06.this, BrowseFolder.class);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -153,9 +133,7 @@ public class ShowPriceChart extends AppCompatActivity {
         // load filename from directory in internal storage
         pricesClose.clear();
         try {
-            // todo hardcoded folder
-            File baseFolderDir = new File(getFilesDir(), "prices");
-            File baseDir = new File(baseFolderDir, directory);
+            File baseDir = new File(getFilesDir(), directory);
             File csvFile = new File(baseDir, filename);
             CsvParserSimple obj = new CsvParserSimple();
             List<String[]> result = null;
