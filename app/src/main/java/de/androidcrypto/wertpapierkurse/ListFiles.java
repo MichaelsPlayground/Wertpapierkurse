@@ -103,6 +103,7 @@ public class ListFiles extends AppCompatActivity implements Serializable {
                     startActivity(startShowPriceChartIntent);
                 }
                 if (returnToActivity.equals("SetupModalIsinYear")) {
+                    System.out.println("start startSetupModalIsinYearIntent");
                     startSetupModalIsinYearIntent.putExtras(bundle);
                     startActivity(startSetupModalIsinYearIntent);
                 }

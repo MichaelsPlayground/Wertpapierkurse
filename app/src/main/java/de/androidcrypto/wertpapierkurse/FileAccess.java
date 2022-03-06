@@ -284,9 +284,9 @@ public class FileAccess {
     }
 
     //
-    private ArrayList<PriceModel> loadHistoricPrices(Context context, String directory, String filename) {
+    public static ArrayList<PriceModel> loadHistoricPrices(Context context, String directory, String filename) {
         // load filename from directory in internal storage
-        ArrayList<PriceModel> priceList = null;
+        ArrayList<PriceModel> priceList = new ArrayList<>();
         priceList.clear();
         try {
             File baseFolderDir = new File(context.getFilesDir(), historicPricesBaseFolder);
@@ -298,18 +298,19 @@ public class FileAccess {
             int listIndex = 0;
             String completeContent = "";
             for (String[] arrays : result) {
-                System.out.println("\nString[" + listIndex++ + "] : " + Arrays.toString(arrays));
+                //System.out.println("\nString[" + listIndex++ + "] : " + Arrays.toString(arrays));
                 completeContent = completeContent + "[nr " + listIndex + "] : " + Arrays.toString(arrays) + "\n";
                 completeContent = completeContent + "-----------------\n";
                 int index = 0;
                 for (String array : arrays) {
-                    System.out.println(index++ + " : " + array);
+                    //System.out.println(index++ + " : " + array);
                 }
                 String arDate = arrays[0];
                 String arDateUnix = arrays[1];
                 String arClose = arrays[2];
                 float priceCloseFloat = Float.parseFloat(arClose);
                 if (priceCloseFloat != 0) {
+                    //System.out.println("adding priceModel");
                     PriceModel priceModel = new PriceModel(arDate, arDateUnix, arClose);
                     priceList.add(priceModel);
                 }

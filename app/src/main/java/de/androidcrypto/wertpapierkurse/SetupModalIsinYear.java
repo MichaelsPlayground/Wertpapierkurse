@@ -39,6 +39,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
 
     ArrayList<StockMovementsModal> bookingModelArrayList;
     ArrayList<Entry> pricesClose = new ArrayList<>();
+    ArrayList<PriceModel> priceModelArrayList = new ArrayList<>(); // filled by FileAcess.loadHistoricPrices
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
         bookingModelArrayList = new ArrayList<StockMovementsModal>();
 
 
+
         browseFolderIntent = new Intent(SetupModalIsinYear.this, BrowseFolder.class);
 
         Bundle extras = getIntent().getExtras();
@@ -67,6 +69,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
             String folder = "";
             String file = "";
             folder = (String) getIntent().getSerializableExtra("selectedFolder"); //Obtaining data
+            System.out.println("*** we are in SetupModalIsinYear activity ***");
             if (folder != null) {
                 choosenFolder = folder;
                 System.out.println("Activity folder: " + folder);
@@ -75,14 +78,49 @@ public class SetupModalIsinYear extends AppCompatActivity {
             file = (String) getIntent().getSerializableExtra("selectedFile"); //Obtaining data
             if (file != null) {
                 choosenFile = file;
-                System.out.println("Activity file: " + file);
+                System.out.println("SetupModalIsinYear Activity file: " + file);
                 // todo do what has todo when file is selected
                 //selectedFile.setText(choosenFolder + " : " + choosenFile);
                 System.out.println("choosenFolder: " + choosenFolder + " choosenFile: " + choosenFile);
-                loadCsvFile(choosenFolder, choosenFile);
+                //loadCsvFile(choosenFolder, baseSubfolder, choosenFile);
+                // load the datasets
+                System.out.println("*** load datasets from file ***");
+                Editable year = entryYear.getText();
+                // todo hardcoded filename
+                stockMovementsFilename = "movements";
+                loadBookingMovementsDatasets(year.toString(), stockMovementsFilename);
+
+                priceModelArrayList.clear();
+                System.out.println("start FileAccess.loadHistoricPrices");
+                priceModelArrayList = FileAccess.loadHistoricPrices(getBaseContext(), choosenFolder, choosenFile);
+                int priceModelArrayListSize = priceModelArrayList.size();
+                System.out.println("priceModelArrayListSize: " + priceModelArrayListSize);
+                System.out.println("bookingModelArrayListSize: " + bookingModelArrayList.size());
+                if (priceModelArrayListSize == 0) {
+                    System.out.println("ERROR: kein Datensatz geladen");
+                    return;
+                }
+                // todo get isin from choosenFile
+                String[] parts = choosenFile.split("_");
+                //String isin = "IE00BJ0KDQ92";
+                String isin = parts[0];
+                System.out.println("choosenFile: " + choosenFile + " isin: " + isin);
+
+                for (int i = 0; i < priceModelArrayListSize; i++) {
+                    String date = priceModelArrayList.get(i).getDate();
+                    String closePrice = priceModelArrayList.get(i).getClosePrice();
+                    int foundPosition = searchInBookingModelArrayList(date, isin);
+                    if (foundPosition >= 0) {
+                        // position found, set price
+                        bookingModelArrayList.get(foundPosition).setClosePrice(closePrice);
+                    }
+                }
+                // todo save the datalist
             }
         }
 
+        // todo calculate the daily account value
+        // todo set end of month prices even if the are weekends from last available date
 
         isinDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,8 +232,10 @@ public class SetupModalIsinYear extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("*** load datasets from file ***");
                 Editable year = entryYear.getText();
+                // todo hardcoded filename
                 stockMovementsFilename = "movements";
-
+                loadBookingMovementsDatasets(year.toString(), stockMovementsFilename);
+                /*
                 // store in year directories, not directly in files
                 File baseDir = new File(getFilesDir(), year.toString());
                 if (!baseDir.exists()) {
@@ -235,6 +275,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
                             " closePrice: " + bookingModelArrayList.get(i).getClosePrice());
                 }
                 System.out.println("++ printout completed ++");
+                 */
             }
         });
 
@@ -246,12 +287,12 @@ public class SetupModalIsinYear extends AppCompatActivity {
                 String isinSearch = "IE00BJ0KDQ92";
                 System.out.println("to search: date " + dateSearch + " ISIN " + isinSearch);
                 if (bookingModelArrayList == null) {
-                    System.out.println("ERROR: no datasets available");
+                    System.out.println("ERROR: no datasets in bookingModelArrayList available");
                     return;
                 }
                 int listSize = bookingModelArrayList.size();
                 if (listSize == 0) {
-                    System.out.println("ERROR: no datasets available");
+                    System.out.println("ERROR: no datasets in bookingModelArrayList available");
                     return;
                 } else {
                     System.out.println("size all datasets: " + listSize);
@@ -266,7 +307,6 @@ public class SetupModalIsinYear extends AppCompatActivity {
                         System.out.println("dataset found: " + i);
                         return;
                     }
-
                 }
                 System.out.println("no dataset found");
             }
@@ -289,11 +329,83 @@ public class SetupModalIsinYear extends AppCompatActivity {
 
     }
 
-    private void loadCsvFile(String directory, String filename) {
+    // todo move to FileAccess
+    private void loadBookingMovementsDatasets(String year, String filename) {
+        // store in year directories, not directly in files
+        File baseDir = new File(getFilesDir(), year.toString());
+        if (!baseDir.exists()) {
+            System.out.println("*** ERROR no directory found ***");
+            return;
+        }
+        String dataFilename = stockMovementsFilename + "_" +
+                year + ".dat";
+        String dataFilenameComplete = baseDir + File.separator + dataFilename;
+        System.out.println("data will be loaded from " + dataFilenameComplete);
+        File loadFile = new File(dataFilenameComplete);
+        if (!loadFile.exists()) {
+            System.out.println("*** ERROR no data file found ***");
+            return;
+        }
+
+        //ArrayList<StockMovementsModal> bookingModelArrayListLoad = new ArrayList<>();
+        bookingModelArrayList.clear();
+        FileInputStream fin= null;
+        try {
+            fin = new FileInputStream(dataFilenameComplete);
+            ObjectInputStream ois = new ObjectInputStream(fin);
+            bookingModelArrayList = (ArrayList<StockMovementsModal>)ois.readObject();
+            fin.close();
+        } catch (FileNotFoundException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("data loaded");
+        int datasetSize = bookingModelArrayList.size();
+        System.out.println("total datasets: " + datasetSize);
+        for (int i = 0; i < datasetSize; i++) {
+            System.out.println("i: " + i +
+                    " date: " + bookingModelArrayList.get(i).getDate() +
+                    " isin: " + bookingModelArrayList.get(i).getStockIsin() +
+                    " closePrice: " + bookingModelArrayList.get(i).getClosePrice());
+        }
+        System.out.println("++ printout completed ++");
+    }
+
+    private int searchInBookingModelArrayList(String searchDate, String searchIsin) {
+        int result = -1;
+        if (bookingModelArrayList == null) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        }
+        int listSize = bookingModelArrayList.size();
+        if (listSize == 0) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        } else {
+            System.out.println("size all datasets: " + listSize);
+        }
+        // iterate through all datasets
+        StockMovementsModal stockMovementsModal;
+        for (int i = 0; i < listSize; i++) {
+            stockMovementsModal = bookingModelArrayList.get(i);
+            String date = stockMovementsModal.getDate();
+            String isin = stockMovementsModal.getStockIsin();
+            if (date.equals(searchDate) && isin.equals(searchIsin)) {
+                System.out.println("dataset found: " + i);
+                return i;
+            }
+        }
+        return result;
+    }
+
+
+    private void loadCsvFile(String directory, String baseSubfolder, String filename) {
         // load filename from directory in internal storage
         pricesClose.clear();
         try {
-            File baseDir = new File(getFilesDir(), directory);
+            File baseSubfolderDir = new File(getFilesDir(), baseSubfolder);
+            File baseDir = new File(baseSubfolderDir, directory);
             File csvFile = new File(baseDir, filename);
             CsvParserSimple obj = new CsvParserSimple();
             List<String[]> result = null;

@@ -25,9 +25,7 @@ public class BrowseFolder extends AppCompatActivity implements Serializable {
     // steuerung des intent verhaltens
     String baseSubfolder = "";
     String returnToActivity = "";
-    String showListFilesActivity;
-
-
+    String showListFilesActivity = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +44,7 @@ public class BrowseFolder extends AppCompatActivity implements Serializable {
         if (extras != null) {
             System.out.println("extras not null");
             baseSubfolder = (String) getIntent().getSerializableExtra("baseSubfolder"); //Obtaining data
-            showListFilesActivity = (String) getIntent().getSerializableExtra("listFilesActivity"); //Obtaining data
+            showListFilesActivity = (String) getIntent().getSerializableExtra("showListFilesActivity"); //Obtaining data
             returnToActivity = (String) getIntent().getSerializableExtra("returnToActivity"); //Obtaining data
             //if (!folder.equals("")) {
             if (baseSubfolder != null) {
@@ -85,8 +83,11 @@ public class BrowseFolder extends AppCompatActivity implements Serializable {
                 bundle.putString("browsedFolder", selectedItem);
                 bundle.putString("baseSubfolder", baseSubfolder);
                 bundle.putString("returnToActivity", returnToActivity);
-                startListFileActivityIntent.putExtras(bundle);
-                startActivity(startListFileActivityIntent);
+                if (showListFilesActivity.equals("true")) {
+                    startListFileActivityIntent.putExtras(bundle);
+                    startActivity(startListFileActivityIntent);
+                }
+                // todo where to return when only a folder is choosen ?
             }
         });
 
