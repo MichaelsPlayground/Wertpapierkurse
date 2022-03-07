@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 public class SetupModalIsinYear extends AppCompatActivity {
 
@@ -37,7 +36,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
     String choosenFile = ""; // filled by ListFiles Intent
     final String baseSubfolder = "prices"; // todo change hardcoded
 
-    ArrayList<StockMovementsModal> bookingModelArrayList;
+    ArrayList<StockMovementsModalV2> bookingModelArrayList;
     ArrayList<Entry> pricesClose = new ArrayList<>();
     ArrayList<PriceModel> priceModelArrayList = new ArrayList<>(); // filled by FileAcess.loadHistoricPrices
 
@@ -58,7 +57,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
         stockIsin = findViewById(R.id.etSDIYStockIsin);
         entryYear = findViewById(R.id.etSDIYYear);
 
-        bookingModelArrayList = new ArrayList<StockMovementsModal>();
+        bookingModelArrayList = new ArrayList<StockMovementsModalV2>();
 
 
 
@@ -163,7 +162,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
                 // now store each date
                 for (int i = 0; i < daysInYearWithoutWeenends.size(); i++) {
                     String date = daysInYearWithoutWeenends.get(i);
-                    StockMovementsModal bookingModel = new StockMovementsModal(
+                    StockMovementsModalV2 bookingModel = new StockMovementsModalV2(
                             date, "", "stockname", isin.toString(),
                             "", "", "", "",
                             "", "", "",
@@ -298,7 +297,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
                     System.out.println("size all datasets: " + listSize);
                 }
                 // iterate through all datasets
-                StockMovementsModal stockMovementsModal;
+                StockMovementsModalV2 stockMovementsModal;
                 for (int i = 0; i < listSize; i++) {
                     stockMovementsModal = bookingModelArrayList.get(i);
                     String date = stockMovementsModal.getDate();
@@ -353,7 +352,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
         try {
             fin = new FileInputStream(dataFilenameComplete);
             ObjectInputStream ois = new ObjectInputStream(fin);
-            bookingModelArrayList = (ArrayList<StockMovementsModal>)ois.readObject();
+            bookingModelArrayList = (ArrayList<StockMovementsModalV2>)ois.readObject();
             fin.close();
         } catch (FileNotFoundException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -386,7 +385,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
             System.out.println("size all datasets: " + listSize);
         }
         // iterate through all datasets
-        StockMovementsModal stockMovementsModal;
+        StockMovementsModalV2 stockMovementsModal;
         for (int i = 0; i < listSize; i++) {
             stockMovementsModal = bookingModelArrayList.get(i);
             String date = stockMovementsModal.getDate();

@@ -2,7 +2,7 @@ package de.androidcrypto.wertpapierkurse;
 
 import java.io.Serializable;
 
-public class StockMovementsModal implements Serializable {
+public class StockMovementsModalV1 implements Serializable {
     //below line is use for date (yyyy-mm-dd).
     private String date;
     //below line is use for date as unix timestamp.
@@ -27,9 +27,6 @@ public class StockMovementsModal implements Serializable {
     private String totalPurchaseCosts;
     // schlusskurs des tages
     private String closePrice;
-
-
-
     // depotwert
     private String securitiesAccountAmountEuro;
     //below line is use for a note.
@@ -41,16 +38,16 @@ public class StockMovementsModal implements Serializable {
 
     //below line we are creating constructor class.
     //inside constructor class we are not passing our id because it is incrementing automatically
-    public StockMovementsModal(String date, String dateUnix,
-                               String stockName, String stockIsin,
-                               String direction, String amountEuro,
-                               String numberShares, String bank,
-                               String securitiesAccount,
-                               String note, String totalNumberShares,
-                               String totalPurchaseCosts, String closePrice,
-                               String securitiesAccountAmountEuro,
-                               String dataYear, String dataMonth,
-                               String active) {
+    public StockMovementsModalV1(String date, String dateUnix,
+                                 String stockName, String stockIsin,
+                                 String direction, String amountEuro,
+                                 String numberShares, String bank,
+                                 String securitiesAccount,
+                                 String note, String totalNumberShares,
+                                 String totalPurchaseCosts, String closePrice,
+                                 String securitiesAccountAmountEuro,
+                                 String dataYear, String dataMonth,
+                                 String active) {
         this.date = date;
         this.dateUnix = dateUnix;
         this.stockName = stockName;
