@@ -27,14 +27,18 @@ public class SetupModalIsinYear extends AppCompatActivity {
 
     Button isinDelete, yearDelete, generateDataset, printDataset;
     Button saveDataset, loadDataset, searchDataset, appendClosePrices;
+    Button appendBookings, calculateBookings, returnToMainActivity;
     EditText stockIsin, entryYear;
 
     String stockMovementsFilename;
 
     Intent listFolderIntent, listFilesIntent, browseFolderIntent;
+    Intent mainActivityIntent;
     String choosenFolder = ""; // filled by ListFiles Intent
     String choosenFile = ""; // filled by ListFiles Intent
     final String baseSubfolder = "prices"; // todo change hardcoded
+
+    String bookingYear = "2022";; // todo change hardcoded
 
     ArrayList<StockMovementsModalV2> bookingModelArrayList;
     ArrayList<Entry> pricesClose = new ArrayList<>();
@@ -53,6 +57,9 @@ public class SetupModalIsinYear extends AppCompatActivity {
         loadDataset = findViewById(R.id.btnSDIYLoad);
         searchDataset = findViewById(R.id.btnSDIYSearch);
         appendClosePrices = findViewById(R.id.btnSDIYAppendClosePrices);
+        appendBookings = findViewById(R.id.btnSDIYAppendBookings);
+        calculateBookings = findViewById(R.id.btnSDIYCalculateBookings);
+        returnToMainActivity = findViewById(R.id.btnSDIYReturnToMainActivity);
 
         stockIsin = findViewById(R.id.etSDIYStockIsin);
         entryYear = findViewById(R.id.etSDIYYear);
@@ -62,6 +69,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
 
 
         browseFolderIntent = new Intent(SetupModalIsinYear.this, BrowseFolder.class);
+        mainActivityIntent = new Intent(SetupModalIsinYear.this, MainActivity.class);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -111,7 +119,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
                     int foundPosition = searchInBookingModelArrayList(date, isin);
                     if (foundPosition >= 0) {
                         // position found, set price
-                        bookingModelArrayList.get(foundPosition).setClosePrice(closePrice);
+                        bookingModelArrayList.get(foundPosition).setClosePrice(Float.parseFloat(closePrice));
                     }
                 }
                 // todo save the datalist
@@ -138,12 +146,19 @@ public class SetupModalIsinYear extends AppCompatActivity {
         generateDataset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // todo load existing datasets and appen the new ones only
+                // todo load existing datasets and append the new ones only
 
                 System.out.println("*** generate new datasets in the database ***");
                 Editable isin = stockIsin.getText();
                 Editable year = entryYear.getText();
                 System.out.println("for ISIN: " + isin.toString() + " for year: " + year);
+                // first check that ISIN is NOT available in bookingModelArrayList
+                int searchResult = searchIsinInBookingModelArrayList(isin.toString());
+                if (searchResult >= 0) {
+                    // isin allready present in list, don't append a second data row
+                    System.out.println("ISIN " + isin.toString() + " is allready present in dataset");
+                    return;
+                }
 
                 ArrayList<String> daysInYearWithoutWeenends = getListOfDaysWithoutWeekends(year.toString());
                 System.out.println("arraylist generated with entries: " + daysInYearWithoutWeenends.size());
@@ -162,12 +177,14 @@ public class SetupModalIsinYear extends AppCompatActivity {
                 // now store each date
                 for (int i = 0; i < daysInYearWithoutWeenends.size(); i++) {
                     String date = daysInYearWithoutWeenends.get(i);
+                    float unixDate = Utils.dateToUnixDate(date);
                     StockMovementsModalV2 bookingModel = new StockMovementsModalV2(
-                            date, "", "stockname", isin.toString(),
+                            date, unixDate, "stockname", isin.toString(),
                             "", "", "", "",
-                            "", "", "",
-                            "", "", "",
-                            year.toString(), "", "true");
+                            "", "",0,
+                            0, 0, 0,
+                            0,
+                            year.toString(), "", "");
                     bookingModelArrayList.add(bookingModel);
                 }
 
@@ -188,14 +205,19 @@ public class SetupModalIsinYear extends AppCompatActivity {
                 System.out.println("total datasets: " + datasetSize);
                 for (int i = 0; i < datasetSize; i++) {
                     System.out.println("i: " + i +
-                            " date: " + bookingModelArrayList.get(i).getDate() +
-                            " isin: " + bookingModelArrayList.get(i).getStockIsin() +
-                            " close price: " + bookingModelArrayList.get(i).getClosePrice());
+                            " de: " + bookingModelArrayList.get(i).getDate() +
+                            " is: " + bookingModelArrayList.get(i).getStockIsin() +
+                            " cp: " + bookingModelArrayList.get(i).getClosePrice() +
+                            " ts: " + bookingModelArrayList.get(i).getTotalNumberShares() +
+                            " tp: " + bookingModelArrayList.get(i).getTotalPurchaseCosts() +
+                            " ta: " + bookingModelArrayList.get(i).getSecuritiesAccountAmountEuro() +
+                            " wl: " + bookingModelArrayList.get(i).getWinLossEuro());
                 }
                 System.out.println("++ printout completed ++");
             }
         });
 
+        // todo move to FileAccess
         saveDataset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -326,6 +348,85 @@ public class SetupModalIsinYear extends AppCompatActivity {
             }
         });
 
+        appendBookings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("*** append bookings ***");
+                System.out.println("this is a manual function to append some bookings to the database");
+                String date, isin;
+                float totalNumberShares, totalPurchaseCosts;
+                // search dataset in boking ModelArrayList
+                isin = "IE00BJ0KDQ92";
+
+                date = "2022-07-01";
+                totalNumberShares = 10f;
+                totalPurchaseCosts = 40.10f;
+                appendBookingToArrayList("2022-02-01", isin, 10f, 830.1f);
+                appendBookingToArrayList("2022-02-02", isin, 20f, 1650.1f);
+                appendBookingToArrayList("2022-02-03", isin, 30f, 2500.1f);
+                appendBookingToArrayList("2022-02-04", isin, 40f, 3401.1f);
+                appendBookingToArrayList("2022-02-07", isin, 50f, 4400.1f);
+
+                /*
+                int position = searchInBookingModelArrayList(date, isin);
+                if (position >= 0) {
+                    // append values
+                    bookingModelArrayList.get(position).setTotalNumberShares(totalNumberShares);
+                    bookingModelArrayList.get(position).setTotalPurchaseCosts(totalPurchaseCosts);
+                } else {
+                    System.out.println("*** ERROR *** no dataset found for date " + date + " isin " + isin);
+                }*/
+                // todo don't forget so save the list ....
+            }
+        });
+
+        calculateBookings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // this function recalculates the securitiesAccountAmountEuro
+                // and the winLossEuro for each entry
+
+                // check that bookingModelArrayList has entries
+                System.out.println("*** calculate datasets ***");
+                if (bookingModelArrayList == null) {
+                    System.out.println("bookingModelArrayList ist NULL");
+                    return;
+                }
+                int datasetSize = bookingModelArrayList.size();
+                System.out.println("total datasets: " + datasetSize);
+                float totalNumberShares, totalPurchaseCosts, closePrice, securitiesAmountEuro, winLossEuro;
+                for (int i = 0; i < datasetSize; i++) {
+                    totalNumberShares = bookingModelArrayList.get(i).getTotalNumberShares();
+                    totalPurchaseCosts = bookingModelArrayList.get(i).getTotalPurchaseCosts();
+                    closePrice = bookingModelArrayList.get(i).getClosePrice();
+                    securitiesAmountEuro = totalNumberShares * closePrice;
+                    winLossEuro = securitiesAmountEuro - totalPurchaseCosts;
+                    bookingModelArrayList.get(i).setSecuritiesAccountAmountEuro(securitiesAmountEuro);
+                    bookingModelArrayList.get(i).setWinLossEuro(winLossEuro);
+                }
+                // todo don't forget to save the list
+                System.out.println("++ calculation completed +++");
+            }
+        });
+
+        returnToMainActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(mainActivityIntent);
+            }
+        });
+
+    }
+
+    private void appendBookingToArrayList(String date, String isin, float totalNumberShares, float totalPurchaseCosts) {
+        int position = searchInBookingModelArrayList(date, isin);
+        if (position >= 0) {
+            // append values
+            bookingModelArrayList.get(position).setTotalNumberShares(totalNumberShares);
+            bookingModelArrayList.get(position).setTotalPurchaseCosts(totalPurchaseCosts);
+        } else {
+            System.out.println("*** ERROR *** no dataset found for date " + date + " isin " + isin);
+        }
     }
 
     // todo move to FileAccess
@@ -354,9 +455,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
             ObjectInputStream ois = new ObjectInputStream(fin);
             bookingModelArrayList = (ArrayList<StockMovementsModalV2>)ois.readObject();
             fin.close();
-        } catch (FileNotFoundException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
         System.out.println("data loaded");
@@ -391,6 +490,35 @@ public class SetupModalIsinYear extends AppCompatActivity {
             String date = stockMovementsModal.getDate();
             String isin = stockMovementsModal.getStockIsin();
             if (date.equals(searchDate) && isin.equals(searchIsin)) {
+                System.out.println("dataset found: " + i);
+                return i;
+            }
+        }
+        return result;
+    }
+
+    // todo move to FileAccess
+    // this function checks that a datarow is available for an ISIN to avoid
+    // a second insertion
+    private int searchIsinInBookingModelArrayList(String searchIsin) {
+        int result = -1;
+        if (bookingModelArrayList == null) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        }
+        int listSize = bookingModelArrayList.size();
+        if (listSize == 0) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        } else {
+            System.out.println("size all datasets: " + listSize);
+        }
+        // iterate through all datasets
+        StockMovementsModalV2 stockMovementsModal;
+        for (int i = 0; i < listSize; i++) {
+            stockMovementsModal = bookingModelArrayList.get(i);
+            String isin = stockMovementsModal.getStockIsin();
+            if (isin.equals(searchIsin)) {
                 System.out.println("dataset found: " + i);
                 return i;
             }

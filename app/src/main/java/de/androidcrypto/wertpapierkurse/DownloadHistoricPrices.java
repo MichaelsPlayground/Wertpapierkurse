@@ -723,6 +723,7 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                     //      " dateLocal: " + dateTimeLocal +
                     " close: " + close);
 
+            // convert date to unixdate
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
             Date dateUnix = null;
             try {

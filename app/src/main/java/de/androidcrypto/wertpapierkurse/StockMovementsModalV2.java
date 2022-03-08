@@ -8,7 +8,7 @@ public class StockMovementsModalV2 implements Serializable {
     //below line is use for date (yyyy-mm-dd).
     private String date;
     //below line is use for date as unix timestamp.
-    private String dateUnix;
+    private float dateUnix;
     //below line is a variable for stock name.
     private String stockName;
     //below line is use for stock isin.
@@ -24,15 +24,15 @@ public class StockMovementsModalV2 implements Serializable {
     // wertpapierdepot, e.g. Maxblue 01
     private String securitiesAccount;
     // summe der anteile im bestand
-    private String totalNumberShares;
+    private float totalNumberShares;
     // summe der kaufkosten
-    private String totalPurchaseCosts;
+    private float totalPurchaseCosts;
     // schlusskurs des tages
-    private String closePrice;
-    private Float closePriceF;
+    //private String closePrice;
+    private float closePrice;
     // depotwert
-    private String securitiesAccountAmountEuro;
-    private Float securitiesAccountAmountEuroF;
+    private float securitiesAccountAmountEuro;
+    private float winLossEuro;
     //below line is use for a note.
     private String note;
     // gültigkeit der daten für monat bzw jahr
@@ -41,15 +41,15 @@ public class StockMovementsModalV2 implements Serializable {
     private String active; // true or false
 
     //below line we are creating constructor class.
-    //inside constructor class we are not passing our id because it is incrementing automatically
-    public StockMovementsModalV2(String date, String dateUnix,
+    public StockMovementsModalV2(String date, float dateUnix,
                                  String stockName, String stockIsin,
                                  String direction, String amountEuro,
                                  String numberShares, String bank,
                                  String securitiesAccount,
-                                 String note, String totalNumberShares,
-                                 String totalPurchaseCosts, String closePrice,
-                                 String securitiesAccountAmountEuro,
+                                 String note, float totalNumberShares,
+                                 float totalPurchaseCosts, float closePrice,
+                                 float securitiesAccountAmountEuro,
+                                 float winLossEuro,
                                  String dataYear, String dataMonth,
                                  String active) {
         this.date = date;
@@ -66,6 +66,7 @@ public class StockMovementsModalV2 implements Serializable {
         this.totalPurchaseCosts = totalPurchaseCosts;
         this.closePrice = closePrice;
         this.securitiesAccountAmountEuro = securitiesAccountAmountEuro;
+        this.winLossEuro = winLossEuro;
         this.dataYear = dataYear;
         this.dataMonth = dataMonth;
         this.active = active;
@@ -73,19 +74,19 @@ public class StockMovementsModalV2 implements Serializable {
 
     //on below line we are creating getter and setter methods.
 
-    public String getClosePrice() {
+    public float getClosePrice() {
         return closePrice;
     }
 
-    public void setClosePrice(String closePrice) {
+    public void setClosePrice(float closePrice) {
         this.closePrice = closePrice;
     }
 
-    public String getSecuritiesAccountAmountEuro() {
+    public float getSecuritiesAccountAmountEuro() {
         return securitiesAccountAmountEuro;
     }
 
-    public void setSecuritiesAccountAmountEuro(String securitiesAccountAmountEuro) {
+    public void setSecuritiesAccountAmountEuro(float securitiesAccountAmountEuro) {
         this.securitiesAccountAmountEuro = securitiesAccountAmountEuro;
     }
 
@@ -97,19 +98,19 @@ public class StockMovementsModalV2 implements Serializable {
         this.securitiesAccount = securitiesAccount;
     }
 
-    public String getTotalNumberShares() {
+    public float getTotalNumberShares() {
         return totalNumberShares;
     }
 
-    public void setTotalNumberShares(String totalNumberShares) {
+    public void setTotalNumberShares(float totalNumberShares) {
         this.totalNumberShares = totalNumberShares;
     }
 
-    public String getTotalPurchaseCosts() {
+    public float getTotalPurchaseCosts() {
         return totalPurchaseCosts;
     }
 
-    public void setTotalPurchaseCosts(String totalPurchaseCosts) {
+    public void setTotalPurchaseCosts(float totalPurchaseCosts) {
         this.totalPurchaseCosts = totalPurchaseCosts;
     }
 
@@ -145,11 +146,11 @@ public class StockMovementsModalV2 implements Serializable {
         this.date = date;
     }
 
-    public String getDateUnix() {
+    public float getDateUnix() {
         return dateUnix;
     }
 
-    public void setDateUnix(String dateUnix) {
+    public void setDateUnix(float dateUnix) {
         this.dateUnix = dateUnix;
     }
 
@@ -207,5 +208,13 @@ public class StockMovementsModalV2 implements Serializable {
 
     public void setBank(String bank) {
         this.bank = bank;
+    }
+
+    public float getWinLossEuro() {
+        return winLossEuro;
+    }
+
+    public void setWinLossEuro(float winLossEuro) {
+        this.winLossEuro = winLossEuro;
     }
 }
