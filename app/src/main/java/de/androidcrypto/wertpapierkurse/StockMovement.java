@@ -7,10 +7,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+
+import java.util.Locale;
 
 public class StockMovement extends AppCompatActivity {
 
     Button chooseDate;
+    EditText choosenDate;
     Intent simpleDayPicker;
 
     @Override
@@ -19,12 +23,13 @@ public class StockMovement extends AppCompatActivity {
         setContentView(R.layout.activity_stock_movement);
 
         chooseDate = findViewById(R.id.btnSMChooseDate);
-        String choosenDay = ""; // filled by intent return
-        String choosenMonth = ""; // filled by intent return
-        String choosenYear = ""; // filled by intent return
+        choosenDate = findViewById(R.id.etSMDate);
 
         simpleDayPicker = new Intent(StockMovement.this, SimpleDayPicker.class);
 
+        String choosenDay = ""; // filled by intent return
+        String choosenMonth = ""; // filled by intent return
+        String choosenYear = ""; // filled by intent return
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -41,45 +46,23 @@ public class StockMovement extends AppCompatActivity {
             if (month != null) {
                 choosenMonth = month;
                 System.out.println("month: " + month);
-                // todo do what has todo when file is selected
-                //selectedFile.setText(choosenFolder + " : " + choosenFile);
-                System.out.println("choosenFolder: " + choosenFolder + " choosenFile: " + choosenFile);
-                //loadCsvFile(choosenFolder, baseSubfolder, choosenFile);
-                // load the datasets
-                System.out.println("*** load datasets from file ***");
-                Editable year = entryYear.getText();
-                // todo hardcoded filename
-                stockMovementsFilename = "movements";
-                loadBookingMovementsDatasets(year.toString(), stockMovementsFilename);
-
-                priceModelArrayList.clear();
-                System.out.println("start FileAccess.loadHistoricPrices");
-                priceModelArrayList = FileAccess.loadHistoricPrices(getBaseContext(), choosenFolder, choosenFile);
-                int priceModelArrayListSize = priceModelArrayList.size();
-                System.out.println("priceModelArrayListSize: " + priceModelArrayListSize);
-                System.out.println("bookingModelArrayListSize: " + bookingModelArrayList.size());
-                if (priceModelArrayListSize == 0) {
-                    System.out.println("ERROR: kein Datensatz geladen");
-                    return;
-                }
-                // todo get isin from choosenFile
-                String[] parts = choosenFile.split("_");
-                //String isin = "IE00BJ0KDQ92";
-                String isin = parts[0];
-                System.out.println("choosenFile: " + choosenFile + " isin: " + isin);
-
-                for (int i = 0; i < priceModelArrayListSize; i++) {
-                    String date = priceModelArrayList.get(i).getDate();
-                    String closePrice = priceModelArrayList.get(i).getClosePrice();
-                    int foundPosition = searchInBookingModelArrayList(date, isin);
-                    if (foundPosition >= 0) {
-                        // position found, set price
-                        bookingModelArrayList.get(foundPosition).setClosePrice(Float.parseFloat(closePrice));
-                    }
-                }
-                // todo save the datalist
             }
-        }
+            year = (String) getIntent().getSerializableExtra("selectedYear"); //Obtaining data
+            if (year != null) {
+                choosenYear = year;
+                System.out.println("year: " + year);
+            }
+
+            // todo do what has todo when file is selected
+            //selectedFile.setText(choosenFolder + " : " + choosenFile);
+            String completeDate = year + "-" +
+                    String.format(Locale.GERMANY, "%02d", Integer.valueOf(month)) + "-" +
+                    String.format(Locale.GERMANY, "%02d", Integer.valueOf(day));
+            System.out.println("choosenDate: " + completeDate);
+            choosenDate.setText(completeDate);
+            // todo get isin from choosenFile
+            // todo save the datalist
+        };
 
         chooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
