@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wertpapierkurse">
         <activity
+            android:name=".SimpleDayPicker"
+            android:exported="false" />
+        <activity
+            android:name=".StockMovement"
+            android:exported="false" />
+        <activity
             android:name=".SetupModalIsinYear"
             android:exported="false" />
         <activity
