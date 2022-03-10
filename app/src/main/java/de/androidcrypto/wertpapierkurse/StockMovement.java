@@ -13,9 +13,9 @@ import java.util.Locale;
 
 public class StockMovement extends AppCompatActivity {
 
-    Button chooseDate;
-    EditText choosenDate;
-    Intent simpleDayPicker;
+    Button chooseDate, selectIsin;
+    EditText choosenDate, stockIsin;
+    Intent simpleDayPickerIntent, selectIsinIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +23,20 @@ public class StockMovement extends AppCompatActivity {
         setContentView(R.layout.activity_stock_movement);
 
         chooseDate = findViewById(R.id.btnSMChooseDate);
+        selectIsin = findViewById(R.id.btnSMIsinSelect);
+
         choosenDate = findViewById(R.id.etSMDate);
+        stockIsin = findViewById(R.id.etSMStockIsin);
 
-        simpleDayPicker = new Intent(StockMovement.this, SimpleDayPicker.class);
+        simpleDayPickerIntent = new Intent(StockMovement.this, SimpleDayPicker.class);
+        selectIsinIntent = new Intent(StockMovement.this, MaintainStocklist.class);
 
-        String choosenDay = ""; // filled by intent return
-        String choosenMonth = ""; // filled by intent return
-        String choosenYear = ""; // filled by intent return
+        String choosenDay = "01"; // filled by intent return
+        String choosenMonth = "01"; // filled by intent return
+        String choosenYear = "2022"; // filled by intent return
+
+        String selectedIsin = "ISIN"; // filled by intent return
+        String choosenDateIntent = "2022-01-01";
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -51,23 +58,51 @@ public class StockMovement extends AppCompatActivity {
             if (year != null) {
                 choosenYear = year;
                 System.out.println("year: " + year);
+                //selectedFile.setText(choosenFolder + " : " + choosenFile);
+                String completeDate = choosenYear + "-" +
+                        String.format(Locale.GERMANY, "%02d", Integer.valueOf(choosenMonth)) + "-" +
+                        String.format(Locale.GERMANY, "%02d", Integer.valueOf(choosenDay));
+                System.out.println("choosenDate: " + completeDate);
+                choosenDate.setText(completeDate);
             }
 
-            // todo do what has todo when file is selected
-            //selectedFile.setText(choosenFolder + " : " + choosenFile);
-            String completeDate = year + "-" +
-                    String.format(Locale.GERMANY, "%02d", Integer.valueOf(month)) + "-" +
-                    String.format(Locale.GERMANY, "%02d", Integer.valueOf(day));
-            System.out.println("choosenDate: " + completeDate);
-            choosenDate.setText(completeDate);
-            // todo get isin from choosenFile
-            // todo save the datalist
+
+            String isinSelected = "";
+            isinSelected = (String) getIntent().getSerializableExtra("selectedIsin");
+            String dateChoosenIntent = "";
+            dateChoosenIntent = (String) getIntent().getSerializableExtra("choosenDate");
+            if (isinSelected != null) {
+                selectedIsin = isinSelected;
+                System.out.println("isinSelected: " + isinSelected);
+                stockIsin.setText(selectedIsin);
+            }
+            if (dateChoosenIntent != null) {
+                choosenDateIntent = dateChoosenIntent;
+                System.out.println("choosenDateIntent: " + dateChoosenIntent);
+                choosenDate.setText(choosenDateIntent);
+            }
+
         };
 
         chooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(simpleDayPicker);
+                Bundle bundle = new Bundle();
+                bundle.putString("selectedIsin", stockIsin.getText().toString());
+                bundle.putString("returnToActivity", "StockMovement");
+                simpleDayPickerIntent.putExtras(bundle);
+                startActivity(simpleDayPickerIntent);
+            }
+        });
+
+        selectIsin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("choosenDate", choosenDate.getText().toString());
+                bundle.putString("returnToActivity", "StockMovement");
+                selectIsinIntent.putExtras(bundle);
+                startActivity(selectIsinIntent);
             }
         });
 

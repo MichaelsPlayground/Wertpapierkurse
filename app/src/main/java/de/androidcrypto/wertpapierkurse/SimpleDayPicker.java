@@ -11,6 +11,9 @@ public class SimpleDayPicker extends AppCompatActivity {
     DatePicker simpleDatePicker;
     Intent stockMovementIntent;
 
+    String selectedIsin = "ISIN";
+    String returnToActivity = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +22,14 @@ public class SimpleDayPicker extends AppCompatActivity {
         simpleDatePicker = findViewById(R.id.sdp);
 
         stockMovementIntent = new Intent(SimpleDayPicker.this, StockMovement.class);
+
+        Bundle extras = getIntent().getExtras();
+        System.out.println("get bundles in MaintainStocklist");
+        if (extras != null) {
+            System.out.println("extras not null");
+            returnToActivity = (String) getIntent().getSerializableExtra("returnToActivity");
+            selectedIsin = (String) getIntent().getSerializableExtra("selectedIsin");
+        }
 
         simpleDatePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
@@ -33,6 +44,7 @@ public class SimpleDayPicker extends AppCompatActivity {
                 bundle.putString("selectedYear", String.valueOf(yearChoosen));
                 bundle.putString("selectedMonth", String.valueOf(monthChoosen));
                 bundle.putString("selectedDay", String.valueOf(dayChoosen));
+                bundle.putString("selectedIsin", String.valueOf(selectedIsin));
                 stockMovementIntent.putExtras(bundle);
                 startActivity(stockMovementIntent);
             }

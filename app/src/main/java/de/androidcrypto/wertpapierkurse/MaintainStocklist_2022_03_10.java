@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class MaintainStocklist extends AppCompatActivity {
+public class MaintainStocklist_2022_03_10 extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerViewAdapter mAdapter;
@@ -26,11 +25,6 @@ public class MaintainStocklist extends AppCompatActivity {
     ArrayList<StockModel> stockModelArrayList = new ArrayList<>();
 
     Intent addStockIntent;
-    Intent startStockMovementActivityIntent;
-
-    // steuerung des intent verhaltens
-    String choosenDate = "";
-    String returnToActivity = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +34,10 @@ public class MaintainStocklist extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         constraintLayout = findViewById(R.id.coordinatorLayout);
 
-        addStockIntent = new Intent(MaintainStocklist.this, AddStock.class);
-        startStockMovementActivityIntent = new Intent(MaintainStocklist.this, StockMovement.class);
+        addStockIntent = new Intent(MaintainStocklist_2022_03_10.this, AddStock.class);
 
         populateRecyclerView(getBaseContext());
         enableSwipeToDeleteAndUndo();
-
-        Bundle extras = getIntent().getExtras();
-        System.out.println("get bundles in MaintainStocklist");
-        if (extras != null) {
-            System.out.println("extras not null");
-            returnToActivity = (String) getIntent().getSerializableExtra("returnToActivity");
-            choosenDate = (String) getIntent().getSerializableExtra("choosenDate");
-        }
 
 
         FloatingActionButton fab = findViewById(R.id.fabAddStock);
@@ -66,31 +51,6 @@ public class MaintainStocklist extends AppCompatActivity {
                         .setAction("Action", null).show();*/
             }
         });
-
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                System.out.println("click position: " + position);
-                String isin = stockModelArrayList.get(position).getIsin();
-                System.out.println("The selected isin is : " + position + " this: " + isin);
-                Bundle bundle = new Bundle();
-                bundle.putString("selectedIsin", isin);
-                bundle.putString("choosenDate", choosenDate);
-                bundle.putString("returnToActivity", returnToActivity);
-                /// todo hardcoded activity name
-                if (returnToActivity.equals("StockMovement")) {
-                    startStockMovementActivityIntent.putExtras(bundle);
-                    startActivity(startStockMovementActivityIntent);
-                }
-
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                System.out.println("long click position: " + position);
-            }
-        }));
 
         // todo edit existing entry
 
