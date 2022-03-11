@@ -5,7 +5,11 @@ import android.content.Context;
 import com.github.mikephil.charting.data.Entry;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -21,6 +25,9 @@ public class FileAccess {
     static List<String[]> result = null; // filled by loadStocksList
 
     final static String historicPricesBaseFolder = "prices";
+
+    static ArrayList<StockMovementsModalV2> bookingModelArrayList = new ArrayList<>();
+
 
     public static void stocksListExists(Context context) {
         String path = context.getFilesDir().getAbsolutePath();
@@ -319,6 +326,138 @@ public class FileAccess {
             e.printStackTrace();
         }
         return priceList;
+    }
+
+    /* section bookings */
+
+    public static void loadBookingMovementsDatasets(Context context, String year, String filename) {
+        // store in year directories, not directly in files
+        File baseDir = new File(context.getFilesDir(), year.toString());
+        if (!baseDir.exists()) {
+            System.out.println("*** ERROR no directory found ***");
+            return;
+        }
+        String dataFilename = filename + "_" +
+                year + ".dat";
+        String dataFilenameComplete = baseDir + File.separator + dataFilename;
+        System.out.println("data will be loaded from " + dataFilenameComplete);
+        File loadFile = new File(dataFilenameComplete);
+        if (!loadFile.exists()) {
+            System.out.println("*** ERROR no data file found ***");
+            return;
+        }
+
+        //ArrayList<StockMovementsModal> bookingModelArrayListLoad = new ArrayList<>();
+        bookingModelArrayList.clear();
+        FileInputStream fin= null;
+        try {
+            fin = new FileInputStream(dataFilenameComplete);
+            ObjectInputStream ois = new ObjectInputStream(fin);
+            bookingModelArrayList = (ArrayList<StockMovementsModalV2>)ois.readObject();
+            fin.close();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("data loaded");
+        int datasetSize = bookingModelArrayList.size();
+        System.out.println("total datasets: " + datasetSize);
+        for (int i = 0; i < datasetSize; i++) {
+            System.out.println("i: " + i +
+                    " date: " + bookingModelArrayList.get(i).getDate() +
+                    " isin: " + bookingModelArrayList.get(i).getStockIsin() +
+                    " closePrice: " + bookingModelArrayList.get(i).getClosePrice());
+        }
+        System.out.println("++ printout completed ++");
+    }
+
+    public static void saveBookingMovementsDatasets(Context context, String year, String filename) {
+        // store in year directories, not directly in files
+        File baseDir = new File(context.getFilesDir(), year.toString());
+        if (!baseDir.exists()) {
+            baseDir.mkdirs();
+        }
+        String dataFilename = filename + "_" +
+                year + ".dat";
+        String dataFilenameComplete = baseDir + File.separator + dataFilename;
+        System.out.println("data will be saved in " + dataFilenameComplete);
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(dataFilenameComplete);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(bookingModelArrayList);
+            fout.close();
+            System.out.println("data saved");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERROR: data NOT saved");
+        }
+    }
+
+
+    public static void appendBookingToArrayList(String date, String isin, float totalNumberShares, float totalPurchaseCosts) {
+        int position = searchInBookingModelArrayList(date, isin);
+        if (position >= 0) {
+            // append values
+            bookingModelArrayList.get(position).setTotalNumberShares(totalNumberShares);
+            bookingModelArrayList.get(position).setTotalPurchaseCosts(totalPurchaseCosts);
+        } else {
+            System.out.println("*** ERROR *** no dataset found for date " + date + " isin " + isin);
+        }
+    }
+
+    public static int searchInBookingModelArrayList(String searchDate, String searchIsin) {
+        int result = -1;
+        if (bookingModelArrayList == null) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        }
+        int listSize = bookingModelArrayList.size();
+        if (listSize == 0) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        } else {
+            System.out.println("size all datasets: " + listSize);
+        }
+        // iterate through all datasets
+        StockMovementsModalV2 stockMovementsModal;
+        for (int i = 0; i < listSize; i++) {
+            stockMovementsModal = bookingModelArrayList.get(i);
+            String date = stockMovementsModal.getDate();
+            String isin = stockMovementsModal.getStockIsin();
+            if (date.equals(searchDate) && isin.equals(searchIsin)) {
+                System.out.println("dataset found: " + i);
+                return i;
+            }
+        }
+        return result;
+    }
+
+    // this function checks that a datarow is available for an ISIN to avoid
+    // a second insertion
+    public static int searchIsinInBookingModelArrayList(String searchIsin) {
+        int result = -1;
+        if (bookingModelArrayList == null) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        }
+        int listSize = bookingModelArrayList.size();
+        if (listSize == 0) {
+            System.out.println("ERROR: no datasets in bookingModelArrayList available");
+            return result;
+        } else {
+            System.out.println("size all datasets: " + listSize);
+        }
+        // iterate through all datasets
+        StockMovementsModalV2 stockMovementsModal;
+        for (int i = 0; i < listSize; i++) {
+            stockMovementsModal = bookingModelArrayList.get(i);
+            String isin = stockMovementsModal.getStockIsin();
+            if (isin.equals(searchIsin)) {
+                System.out.println("dataset found: " + i);
+                return i;
+            }
+        }
+        return result;
     }
 
 }

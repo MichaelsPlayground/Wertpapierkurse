@@ -38,7 +38,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
     String choosenFile = ""; // filled by ListFiles Intent
     final String baseSubfolder = "prices"; // todo change hardcoded
 
-    String bookingYear = "2022";; // todo change hardcoded
+    String bookingYear = "2022"; // todo change hardcoded
 
     ArrayList<StockMovementsModalV2> bookingModelArrayList;
     ArrayList<Entry> pricesClose = new ArrayList<>();
