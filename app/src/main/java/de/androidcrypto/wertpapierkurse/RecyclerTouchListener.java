@@ -24,6 +24,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
             public void onLongPress(MotionEvent e) {
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && clickListener != null) {
+                    // todo deprecated recyclerView.getChildPosition ersetzen
                     clickListener.onLongClick(child, recyclerView.getChildPosition(child));
                 }
             }
@@ -35,6 +36,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         View child = rv.findChildViewUnder(e.getX(), e.getY());
         if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+            // todo deprecated recyclerView.getChildPosition ersetzen
             clickListener.onClick(child, rv.getChildPosition(child));
         }
         return false;

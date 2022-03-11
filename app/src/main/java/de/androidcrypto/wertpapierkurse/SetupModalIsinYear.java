@@ -66,6 +66,7 @@ public class SetupModalIsinYear extends AppCompatActivity {
 
         bookingModelArrayList = new ArrayList<StockMovementsModalV2>();
 
+        //todo generate an all database that combines all bookings
 
 
         browseFolderIntent = new Intent(SetupModalIsinYear.this, BrowseFolder.class);

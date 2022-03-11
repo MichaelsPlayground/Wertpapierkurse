@@ -62,10 +62,10 @@
         android:id="@+id/tvIsin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="Geben Sie die ISIN des WPs ein"
+        android:layout_marginEnd="8dp"
+        android:text="Bitte die ISIN des WPs eingeben oder SEL druecken"
         android:textAlignment="center"
         android:textSize="16sp" />
 
@@ -109,15 +109,93 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvSMYear"
+        android:id="@+id/tvSMInfos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="waehlen Sie das Buchungsdatum"
+        android:text="Bitte füllen Sie alle folgenden Felder aus"
         android:textAlignment="center"
         android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/etSMBuySell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:ems="2"
+            android:inputType="textFilter"
+            android:digits="@string/plus_minus"
+            android:hint="+/-"
+            android:minHeight="48dp"
+            android:text="" />
+
+        <EditText
+            android:id="@+id/etSMNumberShares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:ems="8"
+            android:hint="Stueckzahl"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnSMNumberSharesDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:text="loeschen" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/etSMTotalPurchaseCosts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="Kauf-/Verkaufspreis"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnSMTotalPurchaseCostsDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:text="loeschen" />
+
+    </LinearLayout>
+
+
+
 
 
     <Button

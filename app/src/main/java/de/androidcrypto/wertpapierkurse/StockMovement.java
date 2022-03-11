@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +15,7 @@ import java.util.Locale;
 public class StockMovement extends AppCompatActivity {
 
     Button chooseDate, selectIsin;
-    EditText choosenDate, stockIsin;
+    EditText choosenDate, stockIsin, buyOrSell, numberShares, totalPurchaseCosts;
     Intent simpleDayPickerIntent, selectIsinIntent;
 
     @Override
@@ -27,6 +28,9 @@ public class StockMovement extends AppCompatActivity {
 
         choosenDate = findViewById(R.id.etSMDate);
         stockIsin = findViewById(R.id.etSMStockIsin);
+        buyOrSell = findViewById(R.id.etSMBuySell);
+        numberShares = findViewById(R.id.etSMNumberShares);
+        totalPurchaseCosts = findViewById(R.id.etSMTotalPurchaseCosts);
 
         simpleDayPickerIntent = new Intent(StockMovement.this, SimpleDayPicker.class);
         selectIsinIntent = new Intent(StockMovement.this, MaintainStocklist.class);
@@ -37,6 +41,13 @@ public class StockMovement extends AppCompatActivity {
 
         String selectedIsin = "ISIN"; // filled by intent return
         String choosenDateIntent = "2022-01-01";
+
+        // buyOrSell allows only + or -, just one character
+        buyOrSell.setFilters(new InputFilter[] {new InputFilter.LengthFilter(1)});
+
+        // limit the number of decimals before and after decimal separator
+        numberShares.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(20,5)});
+        totalPurchaseCosts.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(20,2)});
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
