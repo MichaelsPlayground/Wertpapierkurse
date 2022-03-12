@@ -1,6 +1,5 @@
 package de.androidcrypto.wertpapierkurse;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,10 +10,7 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SelectStock extends AppCompatActivity {
     Button listEntries;
@@ -60,7 +56,7 @@ public class SelectStock extends AppCompatActivity {
 
         //File[] entries = internalStorageDir.listFiles();
 
-        ArrayList<StockModel> stockModelArrayList = new ArrayList<>();
+        ArrayList<StockModelV2> stockModelArrayList = new ArrayList<>();
         int numberOfStocks = FileAccess.loadStocksListV3(getBaseContext(), stockModelArrayList);
         System.out.println("numberOfStocks: " + numberOfStocks);
         ArrayList<String> entryNames = new ArrayList<>();

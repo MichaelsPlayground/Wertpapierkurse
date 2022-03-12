@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
     Button showPriceChart, maintainStocklist, lineBarChartTest, manageBookings;
     Button workingDayList, setupDatabaseIsinYear, setupModalIsinYear;
-    Button stockMovement;
+    Button stockMovement, yahooApi;
     String API_URL = "https://data.lemon.markets/v1/";
 
     private LineChart lineChart;
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
     Intent maintainStocklistIntent, lineBarChartTestIntent, manageBookingsIntent;
     Intent setupDatabaseIsinYearIntent, setupModalIsinYearIntent;
-    Intent stockMovementIntent;
+    Intent stockMovementIntent, yahooApiIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         setupDatabaseIsinYear = findViewById(R.id.btnSetupDatabaseIsinYear);
         setupModalIsinYear = findViewById(R.id.btnSetupModalIsinYear);
         stockMovement = findViewById(R.id.btnStockMovement);
+        yahooApi = findViewById(R.id.btnYahooApi);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         setupDatabaseIsinYearIntent = new Intent(MainActivity.this, SetupDatabaseIsinYear.class);
         setupModalIsinYearIntent = new Intent(MainActivity.this, SetupModalIsinYear.class);
         stockMovementIntent = new Intent(MainActivity.this, StockMovement.class);
+        yahooApiIntent = new Intent(MainActivity.this, YahooFinanceApiRequestV02.class);
 
         final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
 
@@ -409,6 +411,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        yahooApi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    System.out.println("Yahoo");
+                    YahooFinanceApiRequestV02.main();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //startActivity(yahooApiIntent);
+            }
+        });
+
     }
 
     // this function returns an arraylist of String with all days in a given year in format yyyy-mm-dd
@@ -501,6 +516,8 @@ public class MainActivity extends AppCompatActivity {
                 //updateViews();
             }
         });
+
+
 
         dialogFragment.show(getSupportFragmentManager(), null);
     }

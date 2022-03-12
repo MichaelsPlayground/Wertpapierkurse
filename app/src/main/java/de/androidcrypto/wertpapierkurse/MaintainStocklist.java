@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -23,7 +22,7 @@ public class MaintainStocklist extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerViewAdapter mAdapter;
     ConstraintLayout constraintLayout;
-    ArrayList<StockModel> stockModelArrayList = new ArrayList<>();
+    ArrayList<StockModelV2> stockModelArrayList = new ArrayList<>();
 
     Intent addStockIntent;
     Intent startStockMovementActivityIntent;
@@ -126,11 +125,11 @@ public class MaintainStocklist extends AppCompatActivity {
     }
 
     private void populateRecyclerViewOld() {
-        StockModel stockModel = new StockModel("IE123", "ETF Europe", true, "");
+        StockModelV2 stockModel = new StockModelV2("IE123", "ETF Europe", true, "");
         stockModelArrayList.add(stockModel);
-        stockModel = new StockModel("IE345", "ETF World", true, "");
+        stockModel = new StockModelV2("IE345", "ETF World", true, "");
         stockModelArrayList.add(stockModel);
-        stockModel = new StockModel("LU111222333", "ETF Emerging Markets", true, "");
+        stockModel = new StockModelV2("LU111222333", "ETF Emerging Markets", true, "");
         stockModelArrayList.add(stockModel);
 
         mAdapter = new RecyclerViewAdapter(stockModelArrayList);
@@ -146,7 +145,7 @@ public class MaintainStocklist extends AppCompatActivity {
                 final int position = viewHolder.getAdapterPosition(); // getAdapterPosition is deprecated
                 //final int position = viewHolder.getBindingAdapterPosition();
                 //final String item = mAdapter.getData().get(position);
-                final StockModel item = mAdapter.getData().get(position);
+                final StockModelV2 item = mAdapter.getData().get(position);
                 mAdapter.removeItem(position);
 
                 Snackbar snackbar = Snackbar

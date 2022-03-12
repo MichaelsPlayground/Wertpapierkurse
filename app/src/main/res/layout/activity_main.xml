@@ -207,6 +207,15 @@
             android:layout_marginEnd="2dp"
             android:text="LineBarChart" />
 
+        <Button
+            android:id="@+id/btnYahooApi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="Y Api" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -284,6 +293,8 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
         android:text="XXX" />
+
+
 
 </LinearLayout>
 

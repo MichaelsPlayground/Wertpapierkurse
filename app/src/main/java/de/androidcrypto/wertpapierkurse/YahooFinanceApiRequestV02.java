@@ -13,7 +13,7 @@ import java.net.URL;
 public class YahooFinanceApiRequestV02 {
 
     //
-    public static void main(String[] args) throws IOException {
+    public static void main() throws IOException {
         // https://www.yahoofinanceapi.com/pricing
 
 
@@ -52,12 +52,37 @@ public class YahooFinanceApiRequestV02 {
         }
         String dataName = sbName.toString();
         System.out.println("Content:\n" + dataName);
-
+/*
+I/System.out: {"XDEW.DE":{"symbol":"XDEW.DE","timestamp":[1631516400,1631602800,1631689200,1631775600,
+1631862000,1632121200,1632207600,1632294000,1632380400,1632466800,1632726000,1632812400,1632898800,
+1632985200,1633071600,1633330800,1633417200,1633503600,1633590000,1633676400,1633935600,1634022000,
+1634108400,1634194800,1634281200,1634540400,1634626800,1634713200,1634799600,1634886000,1635145200,
+1635231600,1635318000,1635404400,1635490800,1635753600,1635840000,1635926400,1636012800,1636099200,
+1636358400,1636444800,1636531200,1636617600,1636704000,1636963200,1637049600,1637136000,1637222400,
+1637308800,1637568000,1637654400,1637740800,1637827200,1637913600,1638172800,1638259200,1638345600,
+1638432000,1638518400,1638777600,1638864000,1638950400,1639036800,1639123200,1639382400,1639468800,
+1639555200,1639641600,1639728000,1639987200,1640073600,1640160000,1640246400,1640592000,1640678400,
+1640764800,1640847600,1641196800,1641283200,1641369600,1641456000,1641542400,1641801600,1641888000,
+1641974400,1642060800,1642147200,1642406400,1642492800,1642579200,1642665600,1642752000,1643011200,
+1643097600,1643184000,1643270400,1643356800,1643616000,1643702400,1643788800,1643875200,1643961600,
+1644220800,1644307200,1644393600,1644480000,1644566400,1644825600,1644912000,1644998400,1645084800,
+1645171200,1645430400,1645516800,1645603200,1645689600,1645776000,1646035200,1646121600,1646208000,
+1646294400,1646380800,1647016559],"close":[67.93,67.61,67.74,68.05,67.85,66.68,66.89,67.46,68.39,
+68.46,68.99,68.08,68.61,68.17,67.79,67.52,68.6,67.76,69.57,69.15,69.37,68.98,68.44,69.56,70.17,
+70.03,70.11,70.63,70.44,70.92,71.48,71.63,70.9,70.39,71.29,71.43,71.75,71.83,72.28,72.78,72.68,
+72.56,73.14,73.15,73.56,73.92,74.64,74.26,73.8,73.73,74.56,73.94,74.63,74.74,71.87,72.75,71.6,
+72.04,71.03,71.37,72.55,74.11,73.34,73.61,73.22,73.07,72.92,72.57,74.01,73.39,71.08,72.86,73.27,
+74.1,74.4,75.07,74.99,75.24,74.96,76.01,75.9,74.92,74.65,73.54,74.04,74.26,74.49,73.38,74.2,73.34,
+72.96,73.42,71.67,69.24,69.98,71.42,71.93,70.52,71.74,72.38,72.6,71.83,70.77,71.25,71.82,72.85,
+72.63,72.16,71.3,71.86,71.65,71.32,70.83,70.33,70.49,69.91,69.15,71.4,71.94,71.33,72.54,72.76,
+72.67,72.13],"end":null,"start":null,"dataGranularity":300,"previousClose":null,"chartPreviousClose":67.96}}
+ */
         // split string
         System.out.println("split string");
         String[] parts = dataName.split(",");
-        System.out.println("parts: " + parts.length);
-        for (int i = 0; i < parts.length; i++) {
+        int partsLength = parts.length;
+        System.out.println("parts: " + partsLength);
+        for (int i = 0; i < partsLength; i++) {
             System.out.println("p: " + i + " d: " + parts[i]);
         }
         System.out.println("*** END ***");
@@ -65,13 +90,31 @@ public class YahooFinanceApiRequestV02 {
         System.out.println("responseMethod: " + httpName.getRequestMethod());
 
         System.out.println("search substring timestamp\":[");
-        int pos = searchPosition(parts[0], "timestamp\":[");
-        System.out.println("pos: " + pos);
-        String firstData = parts[0].substring(pos, parts[0].length());
-        System.out.println("firstData: " + firstData);
+        int startTimestamp = -1;
+        int endTimestamp = -1;
 
-        int endTimestamp = 0;
-        for (int i = 1; i < parts.length; i++) {
+        // search startTimestamp
+        for (int i = 0; i < partsLength; i++) {
+            int pos = searchPosition(parts[i],"timestamp\":[");
+            if (pos > -1) {
+                startTimestamp = i;
+                break;
+            }
+        }
+        if (startTimestamp < 0) {
+            System.out.println("Timestamp in JSON nicht gefunden");
+            // todo what to do when no data is found
+            return;
+        }
+        // now correct parts with timestamp
+        int pos = searchPosition(parts[startTimestamp], "timestamp\":[");
+        System.out.println("pos: " + pos);
+        String firstData = parts[startTimestamp].substring(pos);
+        System.out.println("firstData: " + firstData);
+        parts[startTimestamp] = firstData;
+
+        // now search for end timestamp
+        for (int i = startTimestamp; i < partsLength; i++) {
             int posEnd = searchPosition(parts[i], "]");
             if (posEnd > -1) {
                 System.out.println("end timestamp found at " + i + " posEnd: " + posEnd);
@@ -81,16 +124,80 @@ public class YahooFinanceApiRequestV02 {
         }
         System.out.println("endTimestamp: " + endTimestamp);
         parts[endTimestamp] = parts[endTimestamp].replace("]", "");
-        System.out.printf("last timestamp: " + parts[endTimestamp]);
+        System.out.println("last timestamp: " + parts[endTimestamp]);
 
-        System.out.println("find priceClose");
-        for (int i = endTimestamp; i < parts.length; i++) {
-            int posEnd = searchPosition(parts[i], "close\":[");
+        // printout timestamps
+        System.out.println("*** printout timestamps ***");
+        for (int i = startTimestamp; i <= endTimestamp; i++) {
+            //System.out.println("i: " + i + " d: " + parts[i]);
+        }
+
+        // search for closePrice
+        System.out.println("search substring close\":[");
+        int startClosePrice = -1;
+        int endClosePrice = -1;
+
+        // search startClosePrice
+        for (int i = 0; i < partsLength; i++) {
+            int posClose = searchPosition(parts[i],"close\":[");
+            if (posClose > -1) {
+                startClosePrice = i;
+                break;
+            }
+        }
+        if (startClosePrice < 0) {
+            System.out.println("Close price in JSON nicht gefunden");
+            // todo what to do when no data is found
+            return;
+        }
+        // now correct parts with close
+        pos = searchPosition(parts[startClosePrice], "close\":[");
+        System.out.println("pos: " + pos);
+        firstData = parts[startClosePrice].substring(pos);
+        System.out.println("firstData: " + firstData);
+        parts[startClosePrice] = firstData;
+        // now search for end closePrice
+        for (int i = startClosePrice; i < partsLength; i++) {
+            int posEnd = searchPosition(parts[i], "]");
             if (posEnd > -1) {
-                System.out.println("first closePrice found at " + i + " posEnd: " + posEnd);
+                System.out.println("end closePrice found at " + i + " posEnd: " + posEnd);
+                endClosePrice = i;
                 break; // end for
             }
         }
+        System.out.println("endClosePrice: " + endClosePrice);
+        parts[endClosePrice] = parts[endClosePrice].replace("]", "");
+        System.out.printf("last timestamp: " + parts[endClosePrice]);
+
+        // printout closePrice
+        System.out.println("*** printout closePrices ***");
+        for (int i = startClosePrice; i <= endClosePrice; i++) {
+            //System.out.println("i: " + i + " d: " + parts[i]);
+        }
+
+        // search for symbol
+        System.out.println("search substring symbol\":\"");
+        int startSymbol = -1;
+
+        // search startSymbol
+        for (int i = 0; i < partsLength; i++) {
+            pos = searchPosition(parts[i],"symbol\":\"");
+            if (pos > -1) {
+                startSymbol = i;
+                break;
+            }
+        }
+        if (startSymbol < 0) {
+            System.out.println("Symbol in JSON nicht gefunden");
+            // todo what to do when no data is found
+            return;
+        }
+        // now correct parts with symbol
+        pos = searchPosition(parts[startSymbol], "symbol\":\"");
+        System.out.println("pos: " + pos);
+        firstData = parts[startSymbol].substring(pos);
+        System.out.println("firstData: " + firstData.replace("\"", ""));
+        parts[startSymbol] = firstData.replace("\"", "");
 
 
         // get data

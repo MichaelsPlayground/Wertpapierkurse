@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter_2022_03_10 extends RecyclerView.Adapter<RecyclerViewAdapter_2022_03_10.MyViewHolder> {
 
     //private ArrayList<String> data;
-    private ArrayList<StockModel> data;
+    private ArrayList<StockModelV2> data;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -32,7 +32,7 @@ public class RecyclerViewAdapter_2022_03_10 extends RecyclerView.Adapter<Recycle
         this.data = data;
     }
     */
-    public RecyclerViewAdapter_2022_03_10(ArrayList<StockModel> data) {
+    public RecyclerViewAdapter_2022_03_10(ArrayList<StockModelV2> data) {
         this.data = data;
     }
 
@@ -63,7 +63,7 @@ public class RecyclerViewAdapter_2022_03_10 extends RecyclerView.Adapter<Recycle
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(StockModel item, int position) {
+    public void restoreItem(StockModelV2 item, int position) {
         data.add(position, item);
         notifyItemInserted(position);
     }
@@ -74,7 +74,7 @@ public class RecyclerViewAdapter_2022_03_10 extends RecyclerView.Adapter<Recycle
     }
      */
 
-    public ArrayList<StockModel> getData() {
+    public ArrayList<StockModelV2> getData() {
         return data;
     }
     /*

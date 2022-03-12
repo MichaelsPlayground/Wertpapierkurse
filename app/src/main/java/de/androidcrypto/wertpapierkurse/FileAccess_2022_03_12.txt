@@ -13,11 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class FileAccess {
+public class FileAccess_2022_03_12 {
 
-    final static String stockListFileName = "stocks02.txt";
+    final static String stockListFileName = "stocks01.txt";
     static List<String[]> csvStockList = new ArrayList<>();
-    final static String[] csvStockHeader = {"isin", "name", "symbolYahooApi", "symbolApi", "active", "group"};
+    final static String[] csvStockHeader = {"isin", "name", "active", "group"};
 
     static List<String[]> result = null; // filled by loadStocksList
 
@@ -139,8 +139,6 @@ public class FileAccess {
                     int index = 0;
                     String isin = "";
                     String isinStockName = "";
-                    String symbolYahooApi = "";
-                    String symbolApi = "";
                     String active = "";
                     String group = "";
                     for (String array : arrays) {
@@ -154,22 +152,16 @@ public class FileAccess {
                             System.out.println("isinStockName: " + isinStockName);
                         }
                         if (index == 3) {
-                            symbolYahooApi = array;
-                        }
-                        if (index == 4) {
-                            symbolApi = array;
-                        }
-                        if (index == 5) {
                             active = array;
                         }
-                        if (index == 6) {
+                        if (index == 4) {
                             group = array;
                         }
                     }
-                    String[] csvRecord = {isin, isinStockName, symbolYahooApi, symbolApi, active, group};
+                    String[] csvRecord = {isin, isinStockName, active, group};
                     System.out.println("loadStocksList csvRecord vor adding: " + csvRecord);
                     csvStockList.add(csvRecord);
-                    StockModelV2 stockModel = new StockModelV2(isin, isinStockName, symbolYahooApi, symbolApi, Boolean.parseBoolean(active), group);
+                    StockModelV2 stockModel = new StockModelV2(isin, isinStockName, Boolean.parseBoolean(active), group);
                     stockModelArrayList.add(stockModel);
                     System.out.println("loadStocksList nach adding: " + csvStockList.size());
                 }
@@ -248,7 +240,7 @@ public class FileAccess {
         // store the new file with complete list in memory
         String path = context.getFilesDir().getAbsolutePath();
         // todo use pathSeparator instead of /
-        String csvFilenameComplete = path + "/" + FileAccess.stockListFileName;
+        String csvFilenameComplete = path + "/" + FileAccess_2022_03_12.stockListFileName;
         System.out.println("csv file storing: " + csvFilenameComplete);
         CsvWriterSimple writer = new CsvWriterSimple();
         try {
