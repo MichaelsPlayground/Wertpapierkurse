@@ -178,29 +178,7 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                         filenameCsvList.add(csvFilename);
                         downloadResult.append("csv written for ISIN " + isin
                                 + " " + startDateIso + " to " + endDateIso + "\n");
-/*
-                        String ymDirectory = yearSelected + "-" +
-                                String.format(Locale.GERMANY, "%02d", monthSelected);
-                        File baseDir = new File(getFilesDir(), ymDirectory);
-                        if (!baseDir.exists()) {
-                            baseDir.mkdirs();
-                        }
-                        String csvFilename = isin + "_" +
-                                yearSelected + "-" +
-                                String.format(Locale.GERMANY, "%02d", monthSelected) + ".csv";
-                        String csvFilenameComplete = baseDir + "/" + csvFilename;
-                        System.out.println("csv file storing: " + csvFilenameComplete);
-                        filenameCsvList.add(csvFilename);
-                        CsvWriterSimple writer = new CsvWriterSimple();
-                        try {
-                            writer.writeToCsvFile(csvList, new File(baseDir, csvFilename));
-                            System.out.println("csv file written for ISIN " + isin);
-                            downloadResult.append("csv written for ISIN " + isin
-                                    + " " + startDateIso + " to " + endDateIso + "\n");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-*/
+
                         Comparator<Entry> comparator = new Comparator<Entry>() {
                             @Override
                             public int compare(Entry o1, Entry o2) {
@@ -244,13 +222,7 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                 //if (writeSuccess) {
 
                 //filename = "IE00BJ0KDQ92_2022-02.txt";
-/*
-                    File filePath = new File(getFilesDir(), subfolder);
-                    File fullFile = new File(filePath, filename);
-                    Context context = getApplicationContext();
-                    Uri contentUri = getUriForFile(context, "de.androidcrypto.wertpapierkurse.provider", fullFile);
-                    System.out.println("contentUri: " + contentUri);
-*/
+
                 // build the emailIntent
                 try {
                     //String email = "test@test.com"; // change to a real email address you control
@@ -284,25 +256,6 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                         //emailIntent.putExtra(Intent.EXTRA_STREAM, uris);
                     }
 
-/*
-                        filename = filenameCsvList.get(1);
-                        System.out.println("filename: " + filename);
-                        filePath = new File(getFilesDir(), subfolder);
-                        fullFile = new File(filePath, filename);
-                        context = getApplicationContext();
-                        contentUri = getUriForFile(context, "de.androidcrypto.wertpapierkurse.provider", fullFile);
-                        System.out.println("contentUri: " + contentUri);
-                        uris.add(contentUri);
-
-                 //       if (contentUri != null) {
-                        if (uris != null) {
-                            System.out.println("contentUri is not null");
-                            //emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                            //emailIntent.putExtra(Intent.EXTRA_STREAM, uris);
-                            //emailIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-                            emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-                        }
-*/
                     //                      ArrayList<CharSequence> messageList = new ArrayList<>();
                     //                      messageList.add(message);
                     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
@@ -325,69 +278,6 @@ public class DownloadHistoricPrices extends AppCompatActivity {
                     Toast.makeText(DownloadHistoricPrices.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
                 }
             }
-            //}
-
-/*
-                // todo store email address in shared preferences
-                Editable emailAddress = etEmailAddress.getText();
-                // check if email address is entered
-                if (emailAddress.equals("")) {
-                    // todo put an error dialog here
-                    //downloadResult.setText("*** FEHLER *** noch keine Email Adresse eingegeben");
-                    return;
-                }
-                if (filenameCsvList.isEmpty()) {
-                    // todo put an error dialog here
-                    //downloadResult.setText("*** FEHLER *** noch keine Email Adresse eingegeben");
-                    return;
-                }
-                // iterate through filenameCsvList
-                // now just 1 file
-                String filename = filenameCsvList.get(0);
-                System.out.println("filename: " + filename);
-                String subfolder = "";
-                File filePath = new File(getFilesDir(), subfolder);
-                File fullFile = new File(filePath, filename);
-                Context context = getApplicationContext();
-                Uri contentUri = getUriForFile(context, "de.androidcrypto.wertpapierkurse.provider", fullFile);
-                System.out.println("contentUri: " + contentUri);
-
-                // build the emailIntent
-                try {
-                    //String email = "test@test.com"; // change to a real email address you control
-                    //String email = emailAddress;
-                    String subject = "email subject internal from Wertpapierkurse";
-                    String message = "email message";
-                    final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    emailIntent.setType("plain/text");
-                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{String.valueOf(emailAddress)});
-                    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-                    emailIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    if (contentUri != null) {
-                        System.out.println("contentUri is not null");
-                        emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                    }
-                    emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
-                    System.out.println("before DownloadHistoricPrices.this.startActivity");
-
-                    // new no further error
-                    // source: https://stackoverflow.com/a/59439316/8166854
-                    Intent chooser = Intent.createChooser(emailIntent, "Share File now");
-                    List<ResolveInfo> resInfoList = DownloadHistoricPrices.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        DownloadHistoricPrices.this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    }
-                    startActivity(chooser);
-
-                    System.out.println("after DownloadHistoricPrices.this.startActivity");
-                } catch (SecurityException e) {
-                    System.out.println("error: " + e.toString());
-                    Toast.makeText(DownloadHistoricPrices.this, "Request failed try again: " + e.toString(), Toast.LENGTH_LONG).show();
-                }
-            }*/
 
 
         });

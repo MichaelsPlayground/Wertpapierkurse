@@ -36,8 +36,204 @@ public class YahooFinanceApiRequestV02 {
          */
         // https://yfapi.net/v8/finance/spark?interval=1d&range=6mo&symbols=%20XDEW.DE
 
+        // search for symbols
+        // https://yfapi.net/v6/finance/autocomplete?region=DE&lang=de&query=iShares%20Nasdaq%20100%20UCITS%20ETF
+/*
+{
+  "ResultSet": {
+    "Query": "iShares Nasdaq 100 UCITS ETF",
+    "Result": [
+      {
+        "symbol": "SXRV.SG",
+        "name": "iShares NASDAQ 100 UCITS ETF",
+        "exch": "STU",
+        "type": "M",
+        "exchDisp": "Stuttgart",
+        "typeDisp": "Fonds"
+      },
+      {
+        "symbol": "CNX1.L",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "LSE",
+        "type": "E",
+        "exchDisp": "London",
+        "typeDisp": "ETF"
+      },
+      {
+        "symbol": "CSNDX.SW",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "EBS",
+        "type": "E",
+        "exchDisp": "Schweiz",
+        "typeDisp": "ETF"
+      },
+      {
+        "symbol": "CSNDX.MI",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "MIL",
+        "type": "E",
+        "exchDisp": "Mailand",
+        "typeDisp": "ETF"
+      },
+      {
+        "symbol": "NQSE.SG",
+        "name": "iShares NASDAQ 100 UCITS ETF US",
+        "exch": "STU",
+        "type": "M",
+        "exchDisp": "Stuttgart",
+        "typeDisp": "Fonds"
+      },
+      {
+        "symbol": "ISVAF",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "PNK",
+        "type": "E",
+        "exchDisp": "OTC-Märkte",
+        "typeDisp": "ETF"
+      },
+      {
+        "symbol": "CNDX.L",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "LSE",
+        "type": "E",
+        "exchDisp": "London",
+        "typeDisp": "ETF"
+      },
+      {
+        "symbol": "NQSE.F",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "FRA",
+        "type": "E",
+        "exchDisp": "Frankfurt",
+        "typeDisp": "ETF"
+      },
+      {
+        "symbol": "SXRV.F",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "FRA",
+        "type": "E",
+        "exchDisp": "Frankfurt",
+        "typeDisp": "ETF"
+      },
+      {
+        "symbol": "CNDX.AS",
+        "name": "iShares VII Public Limited Company -  iShares NASDAQ 100 UCITS ETF",
+        "exch": "AMS",
+        "type": "E",
+        "exchDisp": "Amsterdam",
+        "typeDisp": "ETF"
+      }
+    ]
+  }
+}
+ */
+/*
+       https://yfapi.net/v8/finance/spark?interval=1d&range=1mo&symbols=NQSE.F%2CXDEW.DE
+{
+  "XDEW.DE": {
+    "timestamp": [
+      1644566400,
+      1644825600,
+      1644912000,
+      1644998400,
+      1645084800,
+      1645171200,
+      1645430400,
+      1645516800,
+      1645603200,
+      1645689600,
+      1645776000,
+      1646035200,
+      1646121600,
+      1646208000,
+      1646294400,
+      1646380800,
+      1647016559
+    ],
+    "symbol": "XDEW.DE",
+    "close": [
+      72.16,
+      71.3,
+      71.86,
+      71.65,
+      71.32,
+      70.83,
+      70.33,
+      70.49,
+      69.91,
+      69.15,
+      71.4,
+      71.94,
+      71.33,
+      72.54,
+      72.76,
+      72.67,
+      72.13
+    ],
+    "dataGranularity": 300,
+    "end": null,
+    "start": null,
+    "previousClose": null,
+    "chartPreviousClose": 72.16
+  },
+  "NQSE.F": {
+    "timestamp": [
+      1644562800,
+      1644822000,
+      1644908400,
+      1644994800,
+      1645081200,
+      1645167600,
+      1645426800,
+      1645513200,
+      1645599600,
+      1645686000,
+      1645772400,
+      1646031600,
+      1646118000,
+      1646204400,
+      1646290800,
+      1646377200,
+      1647026643
+    ],
+    "symbol": "NQSE.F",
+    "close": [
+      9.275,
+      9.093,
+      9.281,
+      9.293,
+      9.124,
+      8.963,
+      8.747,
+      8.932,
+      8.737,
+      8.59,
+      8.908,
+      8.971,
+      8.974,
+      9.113,
+      8.931,
+      8.896,
+      8.559
+    ],
+    "dataGranularity": 300,
+    "end": null,
+    "start": null,
+    "previousClose": null,
+    "chartPreviousClose": 9.275
+  }
+}
+ */
+
+
+
         //URL urlName = new URL("https://data.lemon.markets/v1/instruments/?isin=IE00BJ0KDQ92&mic=XMUN");
-        URL urlName = new URL("https://yfapi.net/v8/finance/spark?interval=1d&range=6mo&symbols=%20XDEW.DE");
+        //URL urlName = new URL("https://yfapi.net/v8/finance/spark?interval=1d&range=6mo&symbols=%20XDEW.DE");
+        URL urlName = new URL("https://yfapi.net/v8/finance/spark?interval=1d&range=3mo&symbols=%20XDEW.DE");
+
+        // 2 stocks mit comma separated
+        // https://yfapi.net/v8/finance/spark?interval=1d&range=1mo&symbols=NQSE.F%2CXDEW.DE
+
         HttpURLConnection httpName = (HttpURLConnection) urlName.openConnection();
 
         httpName.setRequestProperty("X-API-KEY", "mk9W3hgZK056nOQBrwuH5tMBGZAHOwD6EbFVNwt7");
@@ -129,7 +325,7 @@ I/System.out: {"XDEW.DE":{"symbol":"XDEW.DE","timestamp":[1631516400,1631602800,
         // printout timestamps
         System.out.println("*** printout timestamps ***");
         for (int i = startTimestamp; i <= endTimestamp; i++) {
-            //System.out.println("i: " + i + " d: " + parts[i]);
+            System.out.println("i: " + i + " d: " + parts[i] + " date: " + Utils.unixDateToDate(parts[i]));
         }
 
         // search for closePrice
@@ -167,7 +363,7 @@ I/System.out: {"XDEW.DE":{"symbol":"XDEW.DE","timestamp":[1631516400,1631602800,
         }
         System.out.println("endClosePrice: " + endClosePrice);
         parts[endClosePrice] = parts[endClosePrice].replace("]", "");
-        System.out.printf("last timestamp: " + parts[endClosePrice]);
+        System.out.printf("last endClosePrice: " + parts[endClosePrice]);
 
         // printout closePrice
         System.out.println("*** printout closePrices ***");

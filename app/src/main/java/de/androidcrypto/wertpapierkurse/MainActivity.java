@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     // emerging markets IE00BTJRMP35
     // msci world information IE00BM67HT60
     // commodities DE000A0H0728
+    // Xtrackers S&P 500 Equal Weight UCITS ETF XDEW.F
 
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
     Intent maintainStocklistIntent, lineBarChartTestIntent, manageBookingsIntent;
