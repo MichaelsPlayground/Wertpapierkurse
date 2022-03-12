@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean shortMonthsPicker;
     private String startDateIso, endDateIso; // format yyyy-mm-dd
 
-    // msci world IE00BJ0KDQ92
+    // msci world IE00BJ0KDQ92 XDWD.DE
     // nasdaq IE00B53SZB19
-    // s&p 500 IE00B5BMR087
+    // s&p 500 IE00B5BMR087 CSSPX.DE
     // emerging markets IE00BTJRMP35
     // msci world information IE00BM67HT60
     // commodities DE000A0H0728

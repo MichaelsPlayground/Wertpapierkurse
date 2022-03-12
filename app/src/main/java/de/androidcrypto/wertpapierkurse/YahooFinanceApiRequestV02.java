@@ -23,7 +23,7 @@ public class YahooFinanceApiRequestV02 {
         // mk9W3hgZK056nOQBrwuH5tMBGZAHOwD6EbFVNwt7
         // ishares commodities: EXXY.DE
         // xtrackers s&p500 equal weight XDEW.DE  Xtrackers S&P 500 Equal Weight UCITS ETF (XDEW.L)
-
+        // IE00BJ0KDQ92 MSCI World UCITS ETF (XDWD.DE)
 
         // get name
         System.out.println("*** get name ***");

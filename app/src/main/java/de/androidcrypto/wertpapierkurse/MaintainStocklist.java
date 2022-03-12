@@ -71,9 +71,11 @@ public class MaintainStocklist extends AppCompatActivity {
             public void onClick(View view, int position) {
                 System.out.println("click position: " + position);
                 String isin = stockModelArrayList.get(position).getIsin();
+                String symbolYahooApi = stockModelArrayList.get(position).getSymbolYahooApi();
                 System.out.println("The selected isin is : " + position + " this: " + isin);
                 Bundle bundle = new Bundle();
                 bundle.putString("selectedIsin", isin);
+                bundle.putString("selectedSymbolYahooApi", symbolYahooApi);
                 bundle.putString("choosenDate", choosenDate);
                 bundle.putString("returnToActivity", returnToActivity);
                 /// todo hardcoded activity name
@@ -119,18 +121,6 @@ public class MaintainStocklist extends AppCompatActivity {
         int records = 0;
         records = FileAccess.loadStocksListV3(context, stockModelArrayList);
         System.out.println("existing records: " + records);
-
-        mAdapter = new RecyclerViewAdapter(stockModelArrayList);
-        recyclerView.setAdapter(mAdapter);
-    }
-
-    private void populateRecyclerViewOld() {
-        StockModelV2 stockModel = new StockModelV2("IE123", "ETF Europe", true, "");
-        stockModelArrayList.add(stockModel);
-        stockModel = new StockModelV2("IE345", "ETF World", true, "");
-        stockModelArrayList.add(stockModel);
-        stockModel = new StockModelV2("LU111222333", "ETF Emerging Markets", true, "");
-        stockModelArrayList.add(stockModel);
 
         mAdapter = new RecyclerViewAdapter(stockModelArrayList);
         recyclerView.setAdapter(mAdapter);

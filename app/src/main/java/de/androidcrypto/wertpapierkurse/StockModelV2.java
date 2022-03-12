@@ -37,4 +37,38 @@ public class StockModelV2 {
     public void setIsin(String isin) {
         this.isin = isin;
     }
+
+
+    public void setIsinName(String isinName) {
+        this.isinName = isinName;
+    }
+
+    public String getSymbolYahooApi() {
+        return symbolYahooApi;
+    }
+
+    public void setSymbolYahooApi(String symbolYahooApi) {
+        this.symbolYahooApi = symbolYahooApi;
+    }
+
+    public String getSymbolApi() {
+        return symbolApi;
+    }
+
+    public void setSymbolApi(String symbolApi) {
+        this.symbolApi = symbolApi;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
 }

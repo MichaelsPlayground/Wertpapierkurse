@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+public class RecyclerViewAdapter_2022_03_12 extends RecyclerView.Adapter<RecyclerViewAdapter_2022_03_12.MyViewHolder> {
 
     //private ArrayList<String> data;
     private ArrayList<StockModelV2> data;
@@ -18,14 +18,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTitle;
-        private TextView mSymbolYahooApi;
+
         private TextView mIsinName;
         RelativeLayout relativeLayout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.txtTitle);
-            mSymbolYahooApi = itemView.findViewById(R.id.txtSymbolYahoo);
             mIsinName = itemView.findViewById(R.id.txtIsinName);
         }
     }
@@ -34,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.data = data;
     }
     */
-    public RecyclerViewAdapter(ArrayList<StockModelV2> data) {
+    public RecyclerViewAdapter_2022_03_12(ArrayList<StockModelV2> data) {
         this.data = data;
     }
 
@@ -49,7 +48,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
         //holder.mTitle.setText(data.get(position));
         holder.mTitle.setText(data.get(position).getIsin());
-        holder.mSymbolYahooApi.setText(data.get(position).getSymbolYahooApi());
         holder.mIsinName.setText(data.get(position).getIsinName());
     }
 

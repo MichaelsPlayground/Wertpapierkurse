@@ -15,9 +15,9 @@ import java.io.IOException;
 
 public class AddStock extends AppCompatActivity {
 
-    Button isinDelete, groupDelete;
+    Button isinDelete, groupDelete, symbolYahooDelete;
     Button getStockName, addStock;
-    EditText stockIsin, stockName, stockGroup;
+    EditText stockIsin, stockName, stockGroup, stockSymbolYahooApi;
     CheckBox stockActive;
 
     @Override
@@ -27,11 +27,13 @@ public class AddStock extends AppCompatActivity {
 
         isinDelete = findViewById(R.id.btnIsinDelete);
         groupDelete = findViewById(R.id.btnGroupDelete);
+        symbolYahooDelete = findViewById(R.id.btnSymbolYahooApiDelete);
         getStockName = findViewById(R.id.btnSearchIsin);
         addStock = findViewById(R.id.btnAddStock);
 
         stockIsin = findViewById(R.id.etStockIsin);
         stockName = findViewById(R.id.etStockName);
+        stockSymbolYahooApi = findViewById(R.id.etStockSymbolYahooApi);
         stockGroup = findViewById(R.id.etStockGroup);
 
         stockActive = findViewById(R.id.cbxStockActive);
@@ -57,6 +59,13 @@ public class AddStock extends AppCompatActivity {
             }
         });
 
+        symbolYahooDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stockSymbolYahooApi.setText("");
+            }
+        });
+
         groupDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,10 +80,11 @@ public class AddStock extends AppCompatActivity {
                 // todo check das die felder isin und wertpapiername tatsächlich gefüllt sind
                 Editable isin = stockIsin.getText();
                 Editable isinStockName = stockName.getText();
+                Editable yahooSymbol = stockSymbolYahooApi.getText();
                 boolean activeChecked = stockActive.isChecked();
                 Editable group = stockGroup.getText();
                 //csvStockList.add(csvStockHeader);
-                String[] csvRecord = {String.valueOf(isin), String.valueOf(isinStockName), String.valueOf(activeChecked), String.valueOf(group)};
+                String[] csvRecord = {String.valueOf(isin), String.valueOf(isinStockName), String.valueOf(yahooSymbol), "", String.valueOf(activeChecked), String.valueOf(group)};
 
 
                 // empty the existing stocksList
@@ -84,7 +94,7 @@ public class AddStock extends AppCompatActivity {
                 FileAccess.stocksListExists(v.getContext());
                 // now load the existing file
                 int records = 0;
-                records = FileAccess.loadStocksListV2(v.getContext());
+                records = FileAccess.loadStocksListV4(v.getContext());
                 System.out.println("add to existing records: " + records);
                 // add the new record
                 System.out.println("csvStockList records before adding: " + FileAccess.csvStockList.size());

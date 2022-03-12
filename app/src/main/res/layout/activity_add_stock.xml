@@ -49,7 +49,6 @@
             android:minHeight="48dp"
             android:text="IE00BJ0KDQ92" />
 
-
         <Button
             android:id="@+id/btnIsinDelete"
             android:layout_width="wrap_content"
@@ -96,6 +95,36 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/etStockSymbolYahooApi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="Yahoo API Symbol"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:text="XDWD.DE" />
+
+        <Button
+            android:id="@+id/btnSymbolYahooApiDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:text="loeschen" />
+
+    </LinearLayout>
 
     <CheckBox
         android:id="@+id/cbxStockActive"

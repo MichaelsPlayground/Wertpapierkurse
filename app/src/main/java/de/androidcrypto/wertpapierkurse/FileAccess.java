@@ -182,6 +182,76 @@ public class FileAccess {
         return records;
     }
 
+    public static int loadStocksListV4(Context context) {
+        int records = 0;
+        String path = context.getFilesDir().getAbsolutePath();
+        // todo use pathSeparator instead of /
+        String csvFilenameComplete = path + "/" + stockListFileName;
+        System.out.println("file reading: " + csvFilenameComplete);
+        // check if file exists before reading
+        File csvReadingFile = new File(csvFilenameComplete);
+        boolean csvReadingFileExists = csvReadingFile.exists();
+        System.out.println("The file is existing: " + csvReadingFileExists);
+        String completeContent = "";
+        if (csvReadingFileExists) {
+            try {
+                CsvParserSimple obj = new CsvParserSimple();
+                //List<String[]> result = null;
+                result = obj.readFile(csvReadingFile, 1);
+                int listIndex = 0;
+                for (String[] arrays : result) {
+                    System.out.println("\nString[" + listIndex++ + "] : " + Arrays.toString(arrays));
+                    String listIndex2Digit = String.format("%02d", listIndex);
+                    //completeContent = completeContent + "[nr " + listIndex2Digit + "] : " + Arrays.toString(arrays) + "\n";
+                    completeContent = completeContent + listIndex2Digit + " " + Arrays.toString(arrays).replace("[", "").replaceAll("]", "") + "\n";
+                    //completeContent = completeContent + "-----------------\n";
+
+                    int index = 0;
+                    String isin = "";
+                    String isinStockName = "";
+                    String symbolYahooApi = "";
+                    String symbolApi = "";
+                    String active = "";
+                    String group = "";
+                    for (String array : arrays) {
+                        System.out.println(index++ + " : " + array);
+                        if (index == 1) {
+                            isin = array;
+                            System.out.println("isin: " + isin);
+                        }
+                        if (index == 2) {
+                            isinStockName = array;
+                            System.out.println("isinStockName: " + isinStockName);
+                        }
+                        if (index == 3) {
+                            symbolYahooApi = array;
+                        }
+                        if (index == 4) {
+                            symbolApi = array;
+                        }
+                        if (index == 5) {
+                            active = array;
+                        }
+                        if (index == 6) {
+                            group = array;
+                        }
+                    }
+                    String[] csvRecord = {isin, isinStockName, symbolYahooApi, symbolApi, active, group};
+                    System.out.println("loadStocksList csvRecord vor adding: " + csvRecord);
+                    csvStockList.add(csvRecord);
+                    //stockModelArrayList.add(csvRecord);
+                    System.out.println("loadStocksList nach adding: " + csvStockList.size());
+                }
+                //stocksList.setText(completeContent);
+                records = listIndex;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return records;
+    }
+
+
     public static int loadStocksListV2(Context context) {
         int records = 0;
         String path = context.getFilesDir().getAbsolutePath();

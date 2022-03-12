@@ -18,6 +18,14 @@
         android:paddingRight="8dp"
         android:paddingBottom="8dp">
 
+    <LinearLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp">
 
         <TextView
             android:id="@+id/txtTitle"
@@ -25,6 +33,17 @@
             android:layout_height="wrap_content"
             android:text="Item 1"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
+
+        <TextView
+            android:id="@+id/txtSymbolYahoo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Symbol Yahoo Api"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
+
+
+    </LinearLayout>
 
         <TextView
             android:id="@+id/txtIsinName"
