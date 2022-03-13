@@ -15,14 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
+import de.androidcrypto.wertpapierkurse.files.FileAccess;
+import de.androidcrypto.wertpapierkurse.models.StockModelV2;
 
 public class MaintainStocklist extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerViewAdapter mAdapter;
     ConstraintLayout constraintLayout;
-    ArrayList<StockModelV2> stockModelArrayList = new ArrayList<>();
+    // ArrayList<StockModelV2> stockModelArrayList = new ArrayList<>();
 
     Intent addStockIntent;
     Intent startStockMovementActivityIntent;
@@ -70,8 +71,8 @@ public class MaintainStocklist extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 System.out.println("click position: " + position);
-                String isin = stockModelArrayList.get(position).getIsin();
-                String symbolYahooApi = stockModelArrayList.get(position).getSymbolYahooApi();
+                String isin = FileAccess.stockModelArrayList.get(position).getIsin();
+                String symbolYahooApi = FileAccess.stockModelArrayList.get(position).getSymbolYahooApi();
                 System.out.println("The selected isin is : " + position + " this: " + isin);
                 Bundle bundle = new Bundle();
                 bundle.putString("selectedIsin", isin);
@@ -90,6 +91,11 @@ public class MaintainStocklist extends AppCompatActivity {
             @Override
             public void onLongClick(View view, int position) {
                 System.out.println("long click position: " + position);
+                Bundle bundle = new Bundle();
+                bundle.putString("selectedPosition", String.valueOf(position));
+                bundle.putString("returnToActivity", Constants.MAINTAIN_STOCKLIST_CLASS);
+                addStockIntent.putExtras(bundle);
+                startActivity(addStockIntent);
             }
         }));
 
@@ -105,24 +111,23 @@ public class MaintainStocklist extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        stockModelArrayList.clear();
+        FileAccess.stockModelArrayList.clear();
         populateRecyclerView(getBaseContext());
     }
 
     private void populateRecyclerView(Context context) {
         // empty the existing stocksList
         FileAccess.csvStockList.clear();
-        stockModelArrayList.clear();
-        FileAccess.csvStockList.clear();
+        FileAccess.stockModelArrayList.clear();
         FileAccess.csvStockList.add(FileAccess.csvStockHeader);
         // check if stocks list file exists, if not create one with header
         FileAccess.stocksListExists(context);
         // now load the existing file
         int records = 0;
-        records = FileAccess.loadStocksListV3(context, stockModelArrayList);
+        records = FileAccess.loadStocksListV5(context);
         System.out.println("existing records: " + records);
 
-        mAdapter = new RecyclerViewAdapter(stockModelArrayList);
+        mAdapter = new RecyclerViewAdapter(FileAccess.stockModelArrayList);
         recyclerView.setAdapter(mAdapter);
     }
 

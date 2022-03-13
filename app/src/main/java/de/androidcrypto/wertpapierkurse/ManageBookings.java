@@ -16,6 +16,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import de.androidcrypto.wertpapierkurse.models.BookingModel;
+
 public class ManageBookings extends AppCompatActivity {
 
     RecyclerView recyclerView;

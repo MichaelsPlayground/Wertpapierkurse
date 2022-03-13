@@ -4,17 +4,14 @@ import static androidx.core.content.FileProvider.getUriForFile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -46,9 +43,11 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import de.androidcrypto.wertpapierkurse.files.CsvParserSimple;
+import de.androidcrypto.wertpapierkurse.files.FileAccess;
 
 public class DownloadHistoricPrices extends AppCompatActivity {
 

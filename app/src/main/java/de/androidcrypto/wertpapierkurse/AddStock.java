@@ -2,7 +2,6 @@ package de.androidcrypto.wertpapierkurse;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -10,8 +9,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import java.io.File;
-import java.io.IOException;
+import de.androidcrypto.wertpapierkurse.apis.ApiAccess;
+import de.androidcrypto.wertpapierkurse.files.FileAccess;
 
 public class AddStock extends AppCompatActivity {
 
@@ -19,6 +18,10 @@ public class AddStock extends AppCompatActivity {
     Button getStockName, addStock;
     EditText stockIsin, stockName, stockGroup, stockSymbolYahooApi;
     CheckBox stockActive;
+
+    // steuerung des intent verhaltens
+    String selectedPosition = "";
+    String returnToActivity = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,25 @@ public class AddStock extends AppCompatActivity {
 
 //        addStock.setBackgroundColor(Color.GRAY);
         addStock.setEnabled(false);
+
+        Bundle extras = getIntent().getExtras();
+        System.out.println("get bundles in AddStock");
+        if (extras != null) {
+            System.out.println("extras not null");
+            returnToActivity = (String) getIntent().getSerializableExtra("returnToActivity");
+            selectedPosition = (String) getIntent().getSerializableExtra("selectedPosition");
+            System.out.println("selectedPosition in stockModelArrayList: " + selectedPosition);
+            if (returnToActivity.equals(Constants.MAINTAIN_STOCKLIST_CLASS)) {
+                int pos = Integer.valueOf(selectedPosition);
+                stockIsin.setText(FileAccess.stockModelArrayList.get(pos).getIsin());
+                stockName.setText(FileAccess.stockModelArrayList.get(pos).getIsinName());
+                stockSymbolYahooApi.setText(FileAccess.stockModelArrayList.get(pos).getSymbolYahooApi());
+                stockGroup.setText(FileAccess.stockModelArrayList.get(pos).getGroup());
+                stockActive.setChecked(FileAccess.stockModelArrayList.get(pos).getActive());
+                addStock.setText("Wertpapier aendern");
+                addStock.setEnabled(true);
+            }
+        }
 
         isinDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,11 +120,17 @@ public class AddStock extends AppCompatActivity {
                 System.out.println("add to existing records: " + records);
                 // add the new record
                 System.out.println("csvStockList records before adding: " + FileAccess.csvStockList.size());
-                FileAccess.csvStockList.add(csvRecord);
+                if (returnToActivity.equals(Constants.MAINTAIN_STOCKLIST_CLASS)) {
+                    // editing an existing entry
+                    // todo write the code for editing the data
+                } else {
+                    // add a new entry
+                    FileAccess.csvStockList.add(csvRecord);
+                }
                 System.out.println("csvStockList records after adding: " + FileAccess.csvStockList.size());
                 // delete the old csv file
                 FileAccess.stocksListDeleteFile(v.getContext());
-                boolean wirteSuccess = FileAccess.writeStocksList(v.getContext(), FileAccess.csvStockList);
+                boolean writeSuccess = FileAccess.writeStocksList(v.getContext(), FileAccess.csvStockList);
       /*
                 // store the new file with complete list in memory
                 String path = getFilesDir().getAbsolutePath();
@@ -117,7 +145,7 @@ public class AddStock extends AppCompatActivity {
                 }
 
        */
-                System.out.println("write the new csvStockList: " + wirteSuccess);
+                System.out.println("write the new csvStockList: " + writeSuccess);
 
 
 

@@ -10,8 +10,9 @@ import android.widget.EditText;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import de.androidcrypto.wertpapierkurse.models.BookingModel;
 
 public class SetupDatabaseIsinYear extends AppCompatActivity {
 

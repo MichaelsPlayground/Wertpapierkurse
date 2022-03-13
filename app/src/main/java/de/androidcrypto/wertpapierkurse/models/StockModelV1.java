@@ -1,4 +1,4 @@
-package de.androidcrypto.wertpapierkurse;
+package de.androidcrypto.wertpapierkurse.models;
 
 public class StockModelV1 {
 

@@ -1,4 +1,4 @@
-package de.androidcrypto.wertpapierkurse;
+package de.androidcrypto.wertpapierkurse.apis;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import de.androidcrypto.wertpapierkurse.Utils;
 
 public class YahooFinanceApiRequestV02 {
 

@@ -37,42 +37,31 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+
+import de.androidcrypto.wertpapierkurse.apis.YahooFinanceApiRequestV02;
+import de.androidcrypto.wertpapierkurse.files.CsvWriterSimple;
 
 public class MainActivity extends AppCompatActivity {
     // lemon.markets docs: https://data.lemon.markets/v1/docs
 
-    EditText stockIsin, stockName, date;
-    DatePickerDialog datePickerDialog;
-    Button getStockName, getPrices, monthYearPicker, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
+    Button getPrices, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
     Button showPriceChart, maintainStocklist, lineBarChartTest, manageBookings;
     Button workingDayList, setupDatabaseIsinYear, setupModalIsinYear;
     Button stockMovement, yahooApi;
     String API_URL = "https://data.lemon.markets/v1/";
 
-    private LineChart lineChart;
     ArrayList<Entry> pricesClose = new ArrayList<>();
 
     List<String[]> csvList = new ArrayList<>();
     String[] csvHeaderPrices = {"date", "timestamp", "close"};
-
-    // for selecting start and end date of download historical prices
-    private int yearSelected;
-    private int monthSelected;
-    private int currentYear;
-    private boolean shortMonthsPicker;
-    private String startDateIso, endDateIso; // format yyyy-mm-dd
 
     // msci world IE00BJ0KDQ92 XDWD.DE
     // nasdaq IE00B53SZB19
@@ -97,12 +86,6 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        lineChart = findViewById(R.id.activity_main_linechart);
-
-        stockIsin = findViewById(R.id.etStockIsin);
-        stockName = findViewById(R.id.etStockName);
-        getStockName = findViewById(R.id.btnSearchIsin);
-        monthYearPicker = findViewById(R.id.btnMonthYearPicker);
         getPrices = findViewById(R.id.btnGetPrices);
         csvSave = findViewById(R.id.btnCsvSave);
         csvLoad = findViewById(R.id.btnCsvLoad);
@@ -129,177 +112,6 @@ public class MainActivity extends AppCompatActivity {
         stockMovementIntent = new Intent(MainActivity.this, StockMovement.class);
         yahooApiIntent = new Intent(MainActivity.this, YahooFinanceApiRequestV02.class);
 
-        final MonthYearPickerDialogFragment[] dialogFragment = new MonthYearPickerDialogFragment[1];
-
-        configureLineChart();
-
-        // initiate the date picker and a button
-        date = (EditText) findViewById(R.id.etStartDate);
-        // perform click event on edit text
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // calender class's instance and get current date , month and year from calender
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-                // date picker dialog
-                datePickerDialog = new DatePickerDialog(MainActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                // set day of month , month and year value in the edit text
-                                date.setText(year + "." + (monthOfYear+1) + "." + dayOfMonth);
-
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.show();
-            }
-        });
-
-        getStockName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("*** get name ***");
-
-                URL urlName = null;
-                try {
-                    Editable isin = stockIsin.getText();
-                    System.out.println("für ISIN: " + isin);
-                    String urlString = API_URL + "instruments/?isin=" + isin + "&mic=XMUN";
-                    urlName = new URL(urlString);
-                    //urlName = new URL("https://data.lemon.markets/v1/instruments/?isin=IE00BJ0KDQ92&mic=XMUN");
-                    HttpURLConnection httpName = (HttpURLConnection) urlName.openConnection();
-                    httpName.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0");
-                    System.out.println(httpName.getResponseCode() + " ResponseMessage: " + httpName.getResponseMessage());
-
-                    BufferedReader brName = new BufferedReader(new InputStreamReader((httpName.getInputStream())));
-                    StringBuilder sbName = new StringBuilder();
-                    String outputName;
-                    while ((outputName = brName.readLine()) != null) {
-                        sbName.append(outputName);
-                    }
-                    String dataName = sbName.toString();
-                    System.out.println("Content:\n" + dataName);
-                    parseName(dataName, stockName);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Error: " + e);
-                    stockName.setText("Fehler, ISIN nicht gefunden");
-                }
-            }
-        });
-
-        getPrices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("*** get prices ***");
-                pricesClose = new ArrayList<>();
-                URL urlName = null;
-                try {
-                    Editable isin = stockIsin.getText();
-                    System.out.println("für ISIN: " + isin);
-                    // https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00BJ0KDQ92&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1
-                    //String urlString = API_URL + "ohlc/d1/?mic=XMUN&from=2022-01-01&decimals=true&epoch=false&sorting=asc&limit=28&page=1" + "?isin=" + isin;
-
-                    // variable dates from startDateIso and endDateIso
-                    String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=" + isin + "&from=" + startDateIso + "&to=" + endDateIso + "&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
-
-                    // fixed date
-                    //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=" + isin + "&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
-
-
-                    //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00B53SZB19&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
-                    //String urlString ="https://data.lemon.markets/v1/ohlc/d1/?mic=XMUN&isin=IE00BJ0KDQ92&from=2022-01-01&to=2022-01-31&decimals=true&epoch=false&sorting=asc&limit=25&page=1";
-                    System.out.println("urlString: " + urlString);
-                    urlName = new URL(urlString);
-                    //urlName = new URL("https://data.lemon.markets/v1/instruments/?isin=IE00BJ0KDQ92&mic=XMUN");
-                    HttpURLConnection httpName = (HttpURLConnection) urlName.openConnection();
-                    httpName.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0");
-                    System.out.println(httpName.getResponseCode() + " ResponseMessage: " + httpName.getResponseMessage());
-
-                    BufferedReader brName = new BufferedReader(new InputStreamReader((httpName.getInputStream())));
-                    StringBuilder sbName = new StringBuilder();
-                    String outputName;
-                    while ((outputName = brName.readLine()) != null) {
-                        sbName.append(outputName);
-                    }
-                    String dataName = sbName.toString();
-                    System.out.println("Content:\n" + dataName);
-
-                    // for csv export
-                    csvList.add(csvHeaderPrices);
-
-                    parsePrices(dataName);
-
-                    String path = getFilesDir().getAbsolutePath();
-                    String csvFilename = isin + "_" +
-                            yearSelected + "-" +
-                            String.format("%02d", monthSelected) + ".txt";
-                    String csvFilenameComplete = path + "/" + csvFilename;
-                    System.out.println("csv file storing: " + csvFilenameComplete);
-                    CsvWriterSimple writer = new CsvWriterSimple();
-                    try {
-                        writer.writeToCsvFile(csvList, new File(csvFilenameComplete));
-                        System.out.println("csv file written");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    Comparator<Entry> comparator = new Comparator<Entry>() {
-                        @Override
-                        public int compare(Entry o1, Entry o2) {
-                            return Float.compare(o1.getX(), o2.getX());
-                        }
-                    };
-
-                    pricesClose.sort(comparator);
-                    //setLineChartData(pricesHigh, pricesLow, pricesClose);
-                    setLineChartData(pricesClose);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Error: " + e);
-                    stockName.setText("Fehler, ISIN nicht gefunden");
-                }
-            }
-        });
-
-        monthYearPicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Calendar calendar = Calendar.getInstance();
-                currentYear = calendar.get(Calendar.YEAR);
-                yearSelected = currentYear;
-                monthSelected = calendar.get(Calendar.MONTH);
-
-                shortMonthsPicker = true;
-                //currentYear = Year.now().getValue();
-                displayMonthYearPickerDialogFragment(true, false);
-            }
-        });
-
-        csvSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Editable isin = stockIsin.getText();
-                String path = getFilesDir().getAbsolutePath();
-                String csvFilename = isin + "_" +
-                        yearSelected + "-" +
-                        String.format("%02d", monthSelected) + ".txt";
-                String csvFilenameComplete = path + "/" + csvFilename;
-                System.out.println("file storing: " + csvFilenameComplete);
-                List<String[]> list = new ArrayList<>();
-                String[] header = {"date", "close"};
-                list.add(header);
-
-            }
-        });
 
         csvLoad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -457,72 +269,6 @@ public class MainActivity extends AppCompatActivity {
         return totalDatesWorkdays;
     }
 
-
-    private MonthYearPickerDialogFragment createDialog(boolean customTitle) {
-        return MonthYearPickerDialogFragment
-                .getInstance(monthSelected,
-                        yearSelected,
-                        customTitle ? getString(R.string.custom_title).toUpperCase() : null,
-                        shortMonthsPicker ? MonthFormat.SHORT : MonthFormat.LONG);
-    }
-
-    private MonthYearPickerDialogFragment createDialogWithRanges(boolean customTitle) {
-        final int minYear = 2010;
-        final int maxYear = currentYear;
-        final int maxMoth = 11;
-        final int minMoth = 0;
-        final int minDay = 1;
-        final int maxDay = 31;
-        long minDate;
-        long maxDate;
-
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.clear();
-        calendar.set(minYear, minMoth, minDay);
-        minDate = calendar.getTimeInMillis();
-
-        calendar.clear();
-        calendar.set(maxYear, maxMoth, maxDay);
-        maxDate = calendar.getTimeInMillis();
-
-        return MonthYearPickerDialogFragment
-                .getInstance(monthSelected,
-                        yearSelected,
-                        minDate,
-                        maxDate,
-                        customTitle ? getString(R.string.custom_title).toUpperCase() : null,
-                        shortMonthsPicker ? MonthFormat.SHORT : MonthFormat.LONG);
-    }
-
-    private void displayMonthYearPickerDialogFragment(boolean withRanges,
-                                                      boolean customTitle) {
-        MonthYearPickerDialogFragment dialogFragment = withRanges ?
-                createDialogWithRanges(customTitle) :
-                createDialog(customTitle);
-
-        dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(int year, int monthOfYear) {
-                monthSelected = monthOfYear + 1;
-                yearSelected = year;
-                // get last date of month
-                LocalDate startDate = LocalDate.of(yearSelected, monthSelected, 1);
-                LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-                startDateIso = String.valueOf(startDate);
-                endDateIso = String.valueOf(endDate);
-                System.out.println("Range von " + startDate + " bis " + endDate);
-                EditText range = (EditText) findViewById(R.id.etStartDate);
-                range.setText(startDateIso + " bis " + endDateIso);
-                //updateViews();
-            }
-        });
-
-
-
-        dialogFragment.show(getSupportFragmentManager(), null);
-    }
-
     // uses GSON
     // import com.google.gson.JsonArray;
     // import com.google.gson.JsonObject;
@@ -543,67 +289,6 @@ public class MainActivity extends AppCompatActivity {
             stockName.setText(post_id);
         }
 
-    }
-
-    private void configureLineChart() {
-        Description desc = new Description();
-        desc.setText("Stock Price History");
-        desc.setTextSize(20);
-        lineChart.setDescription(desc);
-
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
-            private final SimpleDateFormat mFormat = new SimpleDateFormat("dd MMM", Locale.ENGLISH);
-
-            @Override
-            public String getFormattedValue(float value) {
-                long millis = (long) value * 1000L;
-                return mFormat.format(new Date(millis));
-            }
-        });
-    }
-
-    private void setLineChartData(ArrayList<Entry> pricesClose) {
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-/*
-        if (highCheckBox.isChecked()) {
-            LineDataSet highLineDataSet = new LineDataSet(pricesHigh, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (High)");
-            highLineDataSet.setDrawCircles(true);
-            highLineDataSet.setCircleRadius(4);
-            highLineDataSet.setDrawValues(false);
-            highLineDataSet.setLineWidth(3);
-            highLineDataSet.setColor(Color.GREEN);
-            highLineDataSet.setCircleColor(Color.GREEN);
-            dataSets.add(highLineDataSet);
-        }
-
-        if (lowCheckBox.isChecked()) {
-            LineDataSet lowLineDataSet = new LineDataSet(pricesLow, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Low)");
-            lowLineDataSet.setDrawCircles(true);
-            lowLineDataSet.setCircleRadius(4);
-            lowLineDataSet.setDrawValues(false);
-            lowLineDataSet.setLineWidth(3);
-            lowLineDataSet.setColor(Color.RED);
-            lowLineDataSet.setCircleColor(Color.RED);
-            dataSets.add(lowLineDataSet);
-        }
-*/
-        //if (closeCheckBox.isChecked()) {
-            //LineDataSet closeLineDataSet = new LineDataSet(pricesClose, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Close)");
-        LineDataSet closeLineDataSet = new LineDataSet(pricesClose, "ISIN " + " Price (Close)");
-            //closeLineDataSet.setDrawCircles(true);
-            closeLineDataSet.setDrawCircles(false);
-            closeLineDataSet.setCircleRadius(4);
-            closeLineDataSet.setDrawValues(false);
-            closeLineDataSet.setLineWidth(3);
-            closeLineDataSet.setColor(Color.rgb(255, 165, 0));
-            closeLineDataSet.setCircleColor(Color.rgb(255, 165, 0));
-            dataSets.add(closeLineDataSet);
-        //}
-
-        LineData lineData = new LineData(dataSets);
-        lineChart.setData(lineData);
-        lineChart.invalidate();
     }
 
     // uses GSON

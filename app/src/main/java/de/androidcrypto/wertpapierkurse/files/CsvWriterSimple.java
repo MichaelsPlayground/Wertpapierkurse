@@ -1,4 +1,4 @@
-package de.androidcrypto.wertpapierkurse;
+package de.androidcrypto.wertpapierkurse.files;
 
 import java.io.BufferedWriter;
 import java.io.File;

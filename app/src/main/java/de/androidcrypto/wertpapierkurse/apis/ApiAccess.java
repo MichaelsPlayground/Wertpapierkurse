@@ -1,4 +1,4 @@
-package de.androidcrypto.wertpapierkurse;
+package de.androidcrypto.wertpapierkurse.apis;
 
 import android.os.StrictMode;
 import android.text.Editable;

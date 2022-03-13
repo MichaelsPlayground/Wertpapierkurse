@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.androidcrypto.wertpapierkurse.files.CsvParserSimple;
+import de.androidcrypto.wertpapierkurse.files.CsvWriterSimple;
+
 public class StockMaintenance extends AppCompatActivity {
 
     final String stockListFileName = "stocks.txt";

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import de.androidcrypto.wertpapierkurse.models.BookingModel;
+
 public class RecyclerViewAdapterBooking extends RecyclerView.Adapter<RecyclerViewAdapterBooking.MyViewHolder> {
 
     //private ArrayList<String> data;

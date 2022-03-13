@@ -4,13 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.Locale;
+
+import de.androidcrypto.wertpapierkurse.files.FileAccess;
 
 public class StockMovement extends AppCompatActivity {
 

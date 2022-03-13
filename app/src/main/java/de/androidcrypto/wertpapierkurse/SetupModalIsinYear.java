@@ -12,7 +12,6 @@ import com.github.mikephil.charting.data.Entry;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+
+import de.androidcrypto.wertpapierkurse.files.CsvParserSimple;
+import de.androidcrypto.wertpapierkurse.files.FileAccess;
+import de.androidcrypto.wertpapierkurse.models.StockMovementsModalV2;
 
 public class SetupModalIsinYear extends AppCompatActivity {
 
