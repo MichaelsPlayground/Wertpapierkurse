@@ -31,6 +31,22 @@ public class FileAccess {
 
     public static ArrayList<StockMovementsModalV2> bookingModelArrayList = new ArrayList<>();
 
+    /* Stocks list section */
+
+    // searches a Yahoo Api-Symbol in StocksList, returns the ISIN if fould
+    public static String searchForSymbolYahooApi(String symbolYahoo) {
+        String isin = "";
+        if (stockModelArrayList.size() > 0) {
+            for (int i = 0; i < stockModelArrayList.size(); i++) {
+                String valueYahoo = stockModelArrayList.get(i).getSymbolYahooApi();
+                if (valueYahoo.equals(symbolYahoo)) {
+                    return stockModelArrayList.get(i).getIsin();
+                }
+            }
+        }
+        return isin;
+    }
+
     public static void stocksListExists(Context context) {
         String path = context.getFilesDir().getAbsolutePath();
         // todo use pathSeparator instead of /
@@ -118,6 +134,7 @@ public class FileAccess {
     }
 
     // same as version V3 but uses the class internal ArrayList<StockModelV2> stockModelArrayList
+    // returns the number of records
     public static int loadStocksListV5(Context context) {
         int records = 0;
         String path = context.getFilesDir().getAbsolutePath();

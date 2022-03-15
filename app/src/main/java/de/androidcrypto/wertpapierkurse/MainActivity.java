@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     // emerging markets IE00BTJRMP35
     // msci world information IE00BM67HT60
     // commodities DE000A0H0728
-    // Xtrackers S&P 500 Equal Weight UCITS ETF XDEW.F
+    // Xtrackers S&P 500 Equal Weight UCITS ETF IE00BLNMYC90 XDEW.DE oder F
 
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
     Intent maintainStocklistIntent, lineBarChartTestIntent, manageBookingsIntent;
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     System.out.println("Yahoo");
-                    YahooFinanceApiRequestV02.main();
+                    YahooFinanceApiRequestV02.main(v);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

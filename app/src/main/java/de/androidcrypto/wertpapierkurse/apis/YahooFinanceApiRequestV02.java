@@ -1,5 +1,7 @@
 package de.androidcrypto.wertpapierkurse.apis;
 
+import android.view.View;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -9,13 +11,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.androidcrypto.wertpapierkurse.Utils;
+import de.androidcrypto.wertpapierkurse.files.FileAccess;
 
 public class YahooFinanceApiRequestV02 {
 
+    static List<String[]> csvList = new ArrayList<>();
+    static String[] csvHeaderPrices = {"date", "timestamp", "close"};
+
     //
-    public static void main() throws IOException {
+    public static void main(View v) throws IOException {
         // https://www.yahoofinanceapi.com/pricing
 
 
@@ -231,13 +239,15 @@ public class YahooFinanceApiRequestV02 {
 
         //URL urlName = new URL("https://data.lemon.markets/v1/instruments/?isin=IE00BJ0KDQ92&mic=XMUN");
         //URL urlName = new URL("https://yfapi.net/v8/finance/spark?interval=1d&range=6mo&symbols=%20XDEW.DE");
-        URL urlName = new URL("https://yfapi.net/v8/finance/spark?interval=1d&range=3mo&symbols=%20XDEW.DE");
+        //URL urlName = new URL("https://yfapi.net/v8/finance/spark?interval=1d&range=3mo&symbols=%20XDEW.DE");
+        URL urlName = new URL("https://yfapi.net/v8/finance/spark?interval=1d&range=1y&symbols=%20XDEW.DE");
 
         // 2 stocks mit comma separated
         // https://yfapi.net/v8/finance/spark?interval=1d&range=1mo&symbols=NQSE.F%2CXDEW.DE
 
         HttpURLConnection httpName = (HttpURLConnection) urlName.openConnection();
-
+        // todo generate a settings form for API keys
+        // todo store Api-Key in encryptedSharePreferences
         httpName.setRequestProperty("X-API-KEY", "mk9W3hgZK056nOQBrwuH5tMBGZAHOwD6EbFVNwt7");
 
         System.out.println(httpName.getResponseCode() + " ResponseMessage: " + httpName.getResponseMessage());
@@ -364,8 +374,11 @@ I/System.out: {"XDEW.DE":{"symbol":"XDEW.DE","timestamp":[1631516400,1631602800,
             }
         }
         System.out.println("endClosePrice: " + endClosePrice);
+        // correct string
         parts[endClosePrice] = parts[endClosePrice].replace("]", "");
-        System.out.printf("last endClosePrice: " + parts[endClosePrice]);
+        parts[endClosePrice] = parts[endClosePrice].replace("}", "");
+        parts[endClosePrice] = parts[endClosePrice].replace("}", "");
+        System.out.println("last endClosePrice: " + parts[endClosePrice]);
 
         // printout closePrice
         System.out.println("*** printout closePrices ***");
@@ -394,8 +407,49 @@ I/System.out: {"XDEW.DE":{"symbol":"XDEW.DE","timestamp":[1631516400,1631602800,
         pos = searchPosition(parts[startSymbol], "symbol\":\"");
         System.out.println("pos: " + pos);
         firstData = parts[startSymbol].substring(pos);
-        System.out.println("firstData: " + firstData.replace("\"", ""));
+        System.out.println("firstData = symbol: " + firstData.replace("\"", ""));
         parts[startSymbol] = firstData.replace("\"", "");
+        String symbol = parts[startSymbol];
+        // search ISIN for Yahoo symbol
+        String isin = FileAccess.searchForSymbolYahooApi(symbol);
+        System.out.println("Symbol: " + symbol + " ISIN: "+ isin);
+
+        // todo store historic pricelist as csv file
+        // first check that we do have same number of timestamps and close prices
+        int numberOfTimestamps = 0;
+        int numberOfClosePrices = 0;
+        int differenceTimestampToClosePrice = startTimestamp - startClosePrice;
+        System.out.println("differenceTimestampToClosePrice: " + differenceTimestampToClosePrice);
+        numberOfTimestamps = endTimestamp - startTimestamp;
+        System.out.println("numberOfTimestamps: " + numberOfTimestamps);
+        numberOfClosePrices = endClosePrice - startClosePrice;
+        System.out.println("numberOfClosePrices: " + numberOfClosePrices);
+        if (numberOfTimestamps != numberOfClosePrices) {
+            System.out.println("anzahl der timestamps und closePrices stimmt nicht überein");
+            return;
+        }
+        csvList.clear();
+        // for csv export
+        csvList.add(csvHeaderPrices);
+        // build entry
+        for (int i = startTimestamp; i <= endTimestamp; i++) {
+            String unixTime = parts[i];
+            String date = Utils.unixDateToDate(unixTime);
+            String closePrice = parts[(i - differenceTimestampToClosePrice)];
+            String[] csvRecord = {date, unixTime, closePrice};
+            System.out.println("CSV data stored " + date.substring(0, 10) + " " + closePrice);
+            csvList.add(csvRecord);
+        }
+        // store in year-month yyyy-mm directories, not in files
+        // using the new method from FileAccess
+        String csvFilename = "";
+        csvFilename = FileAccess.writeHistoricPrices(v.getContext(), 2022, 04, isin, csvList);
+        if (csvFilename.equals("")) {
+            System.out.println("ERROR: could not write file");
+            return;
+        }
+        System.out.println("csvFilename: " + csvFilename);
+
 
 
         // get data
