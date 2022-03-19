@@ -57,39 +57,13 @@
         android:layout_marginEnd="8dp"
         android:text="Depot Bewegungsdatenbank einrichten" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="2dp">
-
-        <Button
-            android:id="@+id/btnStoreYahooApiKey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:text="store API key" />
-
-        <Button
-            android:id="@+id/btnLoadYahooApiKey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:text="load API key" />
-
-    </LinearLayout>
-
     <View
         android:layout_width="320dp"
         android:layout_height="2dp"
-        android:layout_marginStart="20dp"
+        android:background="#E91E63"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:background="#E91E63" />
+        android:layout_marginLeft="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

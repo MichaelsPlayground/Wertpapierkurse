@@ -54,6 +54,10 @@
             android:name=".StockMaintenance"
             android:exported="false" />
         <activity
+            android:name=".StoreYahooApiKey"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

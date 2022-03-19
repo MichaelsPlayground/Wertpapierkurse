@@ -3,4 +3,6 @@
     <string name="custom_title">custom title</string>
     <string name="action_settings">Settings</string>
     <string name="plus_minus">+-</string>
+    <string name="preference_file_key">de.androidcrypto.wertpapierkurse.sharedprefs</string>
+    <string name="yahoo_api_key">yahooApiKey</string>
 </resources>

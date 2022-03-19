@@ -23,17 +23,22 @@ public class YahooFinanceApiRequestV02 {
     static String[] csvHeaderPrices = {"date", "timestamp", "close"};
 
     //
-    public static void main(View v) throws IOException {
+    public static void main(View v, String apiKey) throws IOException {
         // https://www.yahoofinanceapi.com/pricing
 
 
         // get symbols: https://de.finance.yahoo.com
         // yahoo docs: https://www.yahoofinanceapi.com/tutorial
         // api docs: https://www.yahoofinanceapi.com
-        // mk9W3hgZK056nOQBrwuH5tMBGZAHOwD6EbFVNwt7
+
         // ishares commodities: EXXY.DE
         // xtrackers s&p500 equal weight XDEW.DE  Xtrackers S&P 500 Equal Weight UCITS ETF (XDEW.L)
         // IE00BJ0KDQ92 MSCI World UCITS ETF (XDWD.DE)
+
+        if (apiKey.equals("")) {
+            System.out.println("*** ERROR *** no API key given");
+            return;
+        }
 
         // get name
         System.out.println("*** get name ***");
@@ -42,7 +47,7 @@ public class YahooFinanceApiRequestV02 {
         curl -X 'GET' \
   'https://yfapi.net/v8/finance/spark?interval=1d&range=6mo&symbols=%20XDEW.DE' \
   -H 'accept: application/json' \
-  -H 'X-API-KEY: mk9W3hgZK056nOQBrwuH5tMBGZAHOwD6EbFVNwt7'
+  -H 'X-API-KEY: xxx'
          */
         // https://yfapi.net/v8/finance/spark?interval=1d&range=6mo&symbols=%20XDEW.DE
 
@@ -246,9 +251,8 @@ public class YahooFinanceApiRequestV02 {
         // https://yfapi.net/v8/finance/spark?interval=1d&range=1mo&symbols=NQSE.F%2CXDEW.DE
 
         HttpURLConnection httpName = (HttpURLConnection) urlName.openConnection();
-        // todo generate a settings form for API keys
-        // todo store Api-Key in encryptedSharePreferences
-        httpName.setRequestProperty("X-API-KEY", "mk9W3hgZK056nOQBrwuH5tMBGZAHOwD6EbFVNwt7");
+
+        httpName.setRequestProperty("X-API-KEY", apiKey);
 
         System.out.println(httpName.getResponseCode() + " ResponseMessage: " + httpName.getResponseMessage());
 
@@ -461,7 +465,7 @@ I/System.out: {"XDEW.DE":{"symbol":"XDEW.DE","timestamp":[1631516400,1631602800,
         URL url = new URL("https://data.lemon.markets/v1/ohlc/d1/?isin=IE00BJ0KDQ92&mic=XMUN&from=2021-12-30&to=2022-01-03");
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
-        http.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0");
+        http.setRequestProperty("Authorization", "Bearer xxx");
 
         System.out.println(http.getResponseCode() + " ResponseMessage: " + http.getResponseMessage());
 
@@ -484,7 +488,7 @@ I/System.out: {"XDEW.DE":{"symbol":"XDEW.DE","timestamp":[1631516400,1631602800,
         System.out.println("*** page 2 ***");
         url = new URL("https://data.lemon.markets/v1/ohlc/d1/?isin=IE00BJ0KDQ92&mic=XMUN&from=2021-12-08&to=2022-01-05&page=2");
         http = (HttpURLConnection) url.openConnection();
-        http.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0");
+        http.setRequestProperty("Authorization", "Bearer xxx");
 
         System.out.println(http.getResponseCode() + " ResponseMessage: " + http.getResponseMessage());
         br = new BufferedReader(new InputStreamReader((http.getInputStream())));
@@ -619,7 +623,7 @@ https://data.lemon.markets/v1/ohlc/d1/
 https://data.lemon.markets/v1/ohlc/d1/
 request = requests.get("https://data.lemon.markets/v1/ohlc/h1/?isin=isin&mic=mic&from=2021-11-01", headers={"Authorization": "Bearer YOUR-API-KEY"})
 
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0
+xxx
 
 request = requests.get("https://data.lemon.markets/v1/quotes/?isin=isin&mic=mic&from=2021-11-01", headers={"Authorization": "Bearer YOUR-API-KEY"})
 
@@ -633,11 +637,11 @@ curl https://data.lemon.markets/v1/quotes/?isin=isin&mic=mic&from=2021-11-01
 
 Gibt einen wert:
 curl https://data.lemon.markets/v1/ohlc/h1/?isin=IE00BJ0KDQ92&mic=XMUN&from=2021-12-01
-   -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0"
+   -H "Authorization: Bearer xxx"
 
 Mehrere Tage:
 curl https://data.lemon.markets/v1/ohlc/d1/?isin=IE00BJ0KDQ92&mic=XMUN&from=2021-12-08&to=2022-01-05
-   -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0"
+   -H "Authorization: Bearer xxx"
 
 Online curl
 https://reqbin.com/req/c-hlt4gkzd/curl-bearer-token-authorization-header-example
@@ -646,7 +650,7 @@ Dort kann auch der curl code in Java konvertiert werden
 
 URL url = new URL("https://data.lemon.markets/v1/ohlc/d1/?isin=IE00BJ0KDQ92&mic=XMUN&from=2021-12-08&to=2022-01-05");
 HttpURLConnection http = (HttpURLConnection)url.openConnection();
-http.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJsZW1vbi5tYXJrZXRzIiwiaXNzIjoibGVtb24ubWFya2V0cyIsInN1YiI6InVzcl9xeURNZFdXUlJDd1JQOGhHME1HZkxscDZTZkZNa3lYenNUIiwiZXhwIjoxNjc1OTg0Njg0LCJpYXQiOjE2NDQ0NDg2ODQsImp0aSI6ImFwa19xeURNZFhYR0dENFFjU0psVm04S1k1Ump4Y25GbnBHcjRrIiwibW9kZSI6InBhcGVyIn0.Li0sacTPoJHdFiSp-yNQ_lPUeDFgR15V1_VHPZGZel0");
+http.setRequestProperty("Authorization", "Bearer xxx");
 
 System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
 http.disconnect();

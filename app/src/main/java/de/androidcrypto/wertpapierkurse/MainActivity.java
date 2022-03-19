@@ -1,7 +1,9 @@
 package de.androidcrypto.wertpapierkurse;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -55,8 +57,10 @@ public class MainActivity extends AppCompatActivity {
     Button getPrices, csvSave, csvLoad, stockMaintenance, downloadHistoricPrices;
     Button showPriceChart, maintainStocklist, lineBarChartTest, manageBookings;
     Button workingDayList, setupDatabaseIsinYear, setupModalIsinYear;
-    Button stockMovement, yahooApi;
+    Button stockMovement, yahooApi, storeYahooApiKey, loadYahooApiKey;
     String API_URL = "https://data.lemon.markets/v1/";
+
+    String apiKeyFromSharedPreferences = "";
 
     ArrayList<Entry> pricesClose = new ArrayList<>();
 
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     Intent stockMaintenanceIntent, downloadHistoricPricesIntent, showPriceChartIntent;
     Intent maintainStocklistIntent, lineBarChartTestIntent, manageBookingsIntent;
     Intent setupDatabaseIsinYearIntent, setupModalIsinYearIntent;
-    Intent stockMovementIntent, yahooApiIntent;
+    Intent stockMovementIntent, yahooApiIntent, storeYahooApiKeyIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         setupModalIsinYear = findViewById(R.id.btnSetupModalIsinYear);
         stockMovement = findViewById(R.id.btnStockMovement);
         yahooApi = findViewById(R.id.btnYahooApi);
+        storeYahooApiKey = findViewById(R.id.btnStoreYahooApiKey);
+        loadYahooApiKey = findViewById(R.id.btnLoadYahooApiKey);
 
         stockMaintenanceIntent = new Intent(MainActivity.this, StockMaintenance.class);
         downloadHistoricPricesIntent = new Intent(MainActivity.this, DownloadHistoricPrices.class);
@@ -111,7 +117,27 @@ public class MainActivity extends AppCompatActivity {
         setupModalIsinYearIntent = new Intent(MainActivity.this, SetupModalIsinYear.class);
         stockMovementIntent = new Intent(MainActivity.this, StockMovement.class);
         yahooApiIntent = new Intent(MainActivity.this, YahooFinanceApiRequestV02.class);
+        storeYahooApiKeyIntent = new Intent(MainActivity.this, StoreYahooApiKey.class);
 
+        storeYahooApiKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(storeYahooApiKeyIntent);
+            }
+        });
+
+        loadYahooApiKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                SharedPreferences sharedPref = context.getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                String key = sharedPref.getString(getString(R.string.yahoo_api_key), "");
+                System.out.println("key: " + key);
+                //data.setText(key);
+                apiKeyFromSharedPreferences = key;
+            }
+        });
 
         csvLoad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     System.out.println("Yahoo");
-                    YahooFinanceApiRequestV02.main(v);
+                    YahooFinanceApiRequestV02.main(v, apiKeyFromSharedPreferences);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
